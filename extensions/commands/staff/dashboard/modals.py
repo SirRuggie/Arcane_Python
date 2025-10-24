@@ -6,16 +6,18 @@ Modal builders for data entry
 import hikari
 
 
-def build_create_log_modal(selected_user_id: str, team: str, position: str) -> hikari.impl.InteractionModalBuilder:
+def build_create_log_modal(selected_user_id: str, team: str, position: str, dashboard_msg_id: str = None) -> hikari.impl.InteractionModalBuilder:
     """
     Modal for creating new staff log
     User and team/position are already selected, just need hire date
-    Team and position are encoded in custom_id for retrieval
+    Team, position, and dashboard_msg_id are encoded in custom_id for retrieval
     """
+    custom_id = f"staff_dash_create_submit:{selected_user_id}:{team}:{position}:{dashboard_msg_id}" if dashboard_msg_id else f"staff_dash_create_submit:{selected_user_id}:{team}:{position}"
+
     return (
         hikari.impl.InteractionModalBuilder(
             title="Create New Staff Log",
-            custom_id=f"staff_dash_create_submit:{selected_user_id}:{team}:{position}",
+            custom_id=custom_id,
         )
         .add_component(
             hikari.impl.MessageActionRowBuilder()

@@ -228,12 +228,15 @@ async def handle_create_new(
         await ctx.respond("❌ Only leadership can create staff logs.", ephemeral=True)
         return
 
-    # Show user selection view
-    components = build_user_selection_for_creation(ctx.guild_id)
+    # Capture dashboard message ID for later refresh
+    dashboard_msg_id = str(ctx.interaction.message.id)
+
+    # Show user selection view with dashboard message ID
+    components = build_user_selection_for_creation(ctx.guild_id, dashboard_msg_id)
 
     # Create NEW ephemeral message (not edit)
     await ctx.respond(components=components, ephemeral=True)
-    print(f"[Staff Dashboard] Create new - showing user selection")
+    print(f"[Staff Dashboard] Create new - showing user selection (dashboard msg: {dashboard_msg_id})")
 
 
 @register_action("staff_dash_select_for_creation", ephemeral=True, no_return=True, defer_update=True)
@@ -246,6 +249,9 @@ async def handle_select_for_creation(
     **kwargs
 ):
     """Handle user selection for creating new staff log - show team/position selection"""
+    # Parse dashboard message ID from action_id
+    dashboard_msg_id = action_id  # Format: dashboard_msg_id
+
     # Permission check
     if not is_leadership(ctx.member):
         await ctx.respond("❌ Only leadership can create staff logs.", ephemeral=True)
@@ -269,8 +275,8 @@ async def handle_select_for_creation(
         )
         return
 
-    # Show team/position selection view
-    components = build_team_position_selection(ctx.guild_id, user)
+    # Show team/position selection view with dashboard message ID
+    components = build_team_position_selection(ctx.guild_id, user, dashboard_msg_id=dashboard_msg_id)
     await ctx.interaction.edit_initial_response(components=components)
     print(f"[Staff Dashboard] Showing team/position selection for {user.username}")
 
@@ -284,7 +290,10 @@ async def handle_team_select(
     **kwargs
 ):
     """Handle team selection - update position dropdown"""
-    user_id = action_id  # Format: user_id
+    # Parse action_id: Format could be user_id or user_id:dashboard_msg_id
+    parts = action_id.split(':')
+    user_id = parts[0]
+    dashboard_msg_id = parts[1] if len(parts) > 1 else None
 
     # Get selected team
     if not ctx.interaction.values:
@@ -300,7 +309,7 @@ async def handle_team_select(
         return
 
     # Rebuild view with new team selected
-    components = build_team_position_selection(ctx.guild_id, user, selected_team=selected_team)
+    components = build_team_position_selection(ctx.guild_id, user, selected_team=selected_team, dashboard_msg_id=dashboard_msg_id)
     await ctx.interaction.edit_initial_response(components=components)
     print(f"[Staff Dashboard] Team selected: {selected_team}")
 
@@ -314,10 +323,11 @@ async def handle_position_select(
     **kwargs
 ):
     """Handle position selection - update Continue button with team and position data"""
-    # Parse action_id format: user_id:selected_team
-    parts = action_id.split(':', 1)
+    # Parse action_id format: user_id:selected_team or user_id:selected_team:dashboard_msg_id
+    parts = action_id.split(':')
     user_id = parts[0]
     selected_team = parts[1] if len(parts) > 1 else None
+    dashboard_msg_id = parts[2] if len(parts) > 2 else None
 
     # Get selected position from interaction values
     selected_position = ctx.interaction.values[0]
@@ -338,7 +348,8 @@ async def handle_position_select(
         ctx.guild_id,
         user,
         selected_team=selected_team,
-        selected_position=selected_position
+        selected_position=selected_position,
+        dashboard_msg_id=dashboard_msg_id
     )
 
     await ctx.interaction.edit_initial_response(components=components)
@@ -352,20 +363,23 @@ async def handle_continue_creation(
     **kwargs
 ):
     """Handle Continue button - open hire date modal with team/position data"""
-    # Parse action_id format: user_id:team:position
-    parts = action_id.split(':', 2)  # Split into max 3 parts
+    # Parse action_id format: user_id:team:position or user_id:team:position:dashboard_msg_id
+    parts = action_id.split(':')
 
-    if len(parts) != 3:
+    if len(parts) < 3:
         await ctx.respond(
             "❌ Please select both a **team** and **position** before continuing.",
             ephemeral=True
         )
         return
 
-    user_id, team, position = parts
+    user_id = parts[0]
+    team = parts[1]
+    position = parts[2]
+    dashboard_msg_id = parts[3] if len(parts) > 3 else None
 
-    # Pass team/position through modal custom_id
-    modal = build_create_log_modal(user_id, team, position)
+    # Pass team/position/dashboard_msg_id through modal custom_id
+    modal = build_create_log_modal(user_id, team, position, dashboard_msg_id)
     await ctx.interaction.create_modal_response(
         title=modal.title,
         custom_id=modal.custom_id,
@@ -389,15 +403,18 @@ async def handle_create_submit(
         hikari.ResponseType.DEFERRED_MESSAGE_UPDATE
     )
 
-    # Parse action_id format: user_id:team:position
-    parts = action_id.split(':', 2)  # Split into max 3 parts
-    if len(parts) != 3:
+    # Parse action_id format: user_id:team:position or user_id:team:position:dashboard_msg_id
+    parts = action_id.split(':')
+    if len(parts) < 3:
         await ctx.interaction.edit_initial_response(
             components=build_error_message("Invalid data format. Please start over.")
         )
         return
 
-    user_id, team, position = parts
+    user_id = parts[0]
+    team = parts[1]
+    position = parts[2]
+    dashboard_msg_id = parts[3] if len(parts) > 3 else None
 
     # Get hire date from modal
     hire_date_str = ctx.interaction.components[0].components[0].value
@@ -454,6 +471,26 @@ async def handle_create_submit(
             components=build_success_message("Staff Log Created Successfully", details)
         )
         print(f"[Staff Dashboard] Created new staff log for {user.username}")
+
+        # Auto-refresh the main dashboard to show new staff member
+        if dashboard_msg_id:
+            try:
+                all_logs_refresh = await get_all_staff_logs(mongo)
+                stats = {
+                    'active': sum(1 for log in all_logs_refresh if log.get('employment_status') == 'Active'),
+                    'on_leave': sum(1 for log in all_logs_refresh if log.get('employment_status') == 'On Leave'),
+                    'inactive': sum(1 for log in all_logs_refresh if log.get('employment_status') in ['Inactive', 'Terminated', 'Staff Banned'])
+                }
+                dashboard_components = build_main_dashboard(ctx.guild_id, stats, all_logs_refresh)
+
+                # Fetch and edit the original dashboard message
+                dashboard_message = await bot.rest.fetch_message(ctx.channel_id, int(dashboard_msg_id))
+                await bot.rest.edit_message(ctx.channel_id, dashboard_message, components=dashboard_components)
+                print(f"[Staff Dashboard] Successfully refreshed main dashboard (msg: {dashboard_msg_id})")
+            except Exception as refresh_error:
+                print(f"[Staff Dashboard] Failed to refresh dashboard: {refresh_error}")
+        else:
+            print(f"[Staff Dashboard] No dashboard message ID - skipping auto-refresh")
 
     except Exception as e:
         print(f"[Staff Dashboard] Error creating staff log: {e}")
@@ -589,6 +626,8 @@ async def handle_create_submit(
             "Use the dashboard to view and manage their log.",
             ephemeral=True
         )
+        print(f"[Staff Dashboard] Created new staff log for {user.username} via manual ID entry")
+
     except Exception as e:
         await ctx.respond(f"❌ Error creating staff log: {str(e)}", ephemeral=True)
         print(f"[Staff Dashboard] Error creating log: {e}")

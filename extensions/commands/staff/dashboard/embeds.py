@@ -785,7 +785,7 @@ def build_staff_record_view(log: dict, user: hikari.User, guild_id: int, from_te
     return components
 
 
-def build_user_selection_for_creation(guild_id: int) -> list:
+def build_user_selection_for_creation(guild_id: int, dashboard_msg_id: str) -> list:
     """
     Builds the user selection view for creating a new staff log
     """
@@ -803,7 +803,7 @@ def build_user_selection_for_creation(guild_id: int) -> list:
                 ActionRow(components=[
                     SelectMenu(
                         type=hikari.ComponentType.USER_SELECT_MENU,
-                        custom_id="staff_dash_select_for_creation",
+                        custom_id=f"staff_dash_select_for_creation:{dashboard_msg_id}",
                         placeholder="🔍 Select Staff Member...",
                         min_values=1,
                         max_values=1
@@ -839,7 +839,7 @@ def build_user_selection_for_creation(guild_id: int) -> list:
     return components
 
 
-def build_team_position_selection(guild_id: int, user: hikari.User, selected_team: str = None, selected_position: str = None) -> list:
+def build_team_position_selection(guild_id: int, user: hikari.User, selected_team: str = None, selected_position: str = None, dashboard_msg_id: str = None) -> list:
     """
     Builds the team and position selection view for creating a staff log
     """
@@ -866,7 +866,7 @@ def build_team_position_selection(guild_id: int, user: hikari.User, selected_tea
                 # Team selection dropdown
                 ActionRow(components=[
                     TextSelectMenu(
-                        custom_id=f"staff_dash_team_select:{user.id}",
+                        custom_id=f"staff_dash_team_select:{user.id}:{dashboard_msg_id}" if dashboard_msg_id else f"staff_dash_team_select:{user.id}",
                         placeholder="Select Team...",
                         options=[
                             hikari.impl.SelectOptionBuilder(
@@ -886,7 +886,7 @@ def build_team_position_selection(guild_id: int, user: hikari.User, selected_tea
                 # Position selection dropdown
                 ActionRow(components=[
                     TextSelectMenu(
-                        custom_id=f"staff_dash_position_select:{user.id}:{selected_team}",
+                        custom_id=f"staff_dash_position_select:{user.id}:{selected_team}:{dashboard_msg_id}" if dashboard_msg_id else f"staff_dash_position_select:{user.id}:{selected_team}",
                         placeholder="Select Position...",
                         options=[
                             hikari.impl.SelectOptionBuilder(
@@ -903,15 +903,15 @@ def build_team_position_selection(guild_id: int, user: hikari.User, selected_tea
                 Text(content="**Step 3:** Continue to set hire date"),
                 Separator(divider=False, spacing=hikari.SpacingType.SMALL),
 
-                # Continue button - encode team:position in custom_id when both are selected
+                # Continue button - encode team:position:dashboard_msg_id in custom_id when both are selected
                 ActionRow(components=[
                     Button(
                         style=hikari.ButtonStyle.SUCCESS,
                         label="Continue",
                         custom_id=(
-                            f"staff_dash_continue_creation:{user.id}:{selected_team}:{selected_position}"
-                            if selected_position
-                            else f"staff_dash_continue_creation:{user.id}"
+                            f"staff_dash_continue_creation:{user.id}:{selected_team}:{selected_position}:{dashboard_msg_id}"
+                            if selected_position and dashboard_msg_id
+                            else (f"staff_dash_continue_creation:{user.id}:{selected_team}:{selected_position}" if selected_position else f"staff_dash_continue_creation:{user.id}")
                         ),
                         emoji="✅"
                     ),
