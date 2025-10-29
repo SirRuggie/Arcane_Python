@@ -33,6 +33,7 @@ from utils.constants import BLUE_ACCENT, GREEN_ACCENT, MAGENTA_ACCENT, RED_ACCEN
 
 from .helpers import (
     get_clan_options,
+    get_categorized_clan_components,
     create_progress_header,
     create_submission_data,
     get_clan_by_tag,
@@ -58,39 +59,37 @@ async def show_disboard_review_flow(
         mongo: MongoClient = lightbulb.di.INJECTED
 ):
     """Show the Disboard review reporting flow - Step 1: Clan Selection"""
+    # Build component list
+    component_list = [
+        Text(content=create_progress_header(1, 3, ["Select Clan", "Upload Screenshot", "Review"])),
+        Separator(),
+        Text(content="## ⭐ Select Your Clan"),
+        Text(content="Which clan should receive the Disboard review point?"),
+    ]
+
+    # Add categorized clan dropdowns
+    component_list.extend(await get_categorized_clan_components("dr_select_clan", user_id, mongo))
+
+    # Add cancel button and footer
+    component_list.extend([
+        ActionRow(
+            components=[
+                Button(
+                    style=hikari.ButtonStyle.SECONDARY,
+                    label="Cancel",
+                    emoji="❌",
+                    custom_id=f"cancel_report:{user_id}"
+                )
+            ]
+        ),
+        Text(content="-# Select the clan that should receive +1 point for your Disboard review"),
+        Media(items=[MediaItem(media="assets/Blue_Footer.png")])
+    ])
+
     components = [
         Container(
             accent_color=BLUE_ACCENT,
-            components=[
-                Text(content=create_progress_header(1, 3, ["Select Clan", "Upload Screenshot", "Review"])),
-                Separator(),
-
-                Text(content="## ⭐ Select Your Clan"),
-                Text(content="Which clan should receive the Disboard review point?"),
-
-                ActionRow(
-                    components=[
-                        TextSelectMenu(
-                            custom_id=f"dr_select_clan:{user_id}",
-                            placeholder="Choose a clan...",
-                            options=await get_clan_options(mongo)
-                        )
-                    ]
-                ),
-                ActionRow(
-                    components=[
-                        Button(
-                            style=hikari.ButtonStyle.SECONDARY,
-                            label="Cancel",
-                            emoji="❌",
-                            custom_id=f"cancel_report:{user_id}"
-                        )
-                    ]
-                ),
-
-                Text(content="-# Select the clan that should receive +1 point for your Disboard review"),
-                Media(items=[MediaItem(media="assets/Blue_Footer.png")])
-            ]
+            components=component_list
         )
     ]
 
@@ -98,7 +97,7 @@ async def show_disboard_review_flow(
 
 
 # Handler to restart Disboard review flow
-@register_action("show_disboard_review")
+@register_action("show_disboard_review", no_return=True)
 @lightbulb.di.with_di
 async def restart_disboard_review(
         ctx: lightbulb.components.MenuContext,
@@ -108,7 +107,7 @@ async def restart_disboard_review(
 ):
     """Restart the Disboard review flow"""
     user_id = action_id
-    return await show_disboard_review_flow(ctx, user_id, mongo)
+    await show_disboard_review_flow(ctx, user_id, mongo)
 
 
 # ╔══════════════════════════════════════════════════════════╗
@@ -125,6 +124,10 @@ async def dr_select_clan(
         **kwargs
 ):
     """Handle clan selection for Disboard review - show screenshot upload prompt"""
+    # Parse category prefix from action_id (e.g., "competitive_user123")
+    if "_" in action_id and action_id.split("_")[0] in ["competitive", "zen", "fwa"]:
+        category, action_id = action_id.split("_", 1)
+
     user_id = action_id
     selected_clan = ctx.interaction.values[0]
 

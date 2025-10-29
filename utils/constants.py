@@ -33,7 +33,9 @@ FWA_WAR_BASE = {
     "th14": "https://res.cloudinary.com/dxmtzuomk/image/upload/v1751620703/TH14_WarBase.jpg",
     "th15": "https://res.cloudinary.com/dxmtzuomk/image/upload/v1751620703/TH15_WarBase.jpg",
     "th16": "https://res.cloudinary.com/dxmtzuomk/image/upload/v1751620702/TH16_WarBase.jpg",
+    "th16_new": "https://res.cloudinary.com/dxmtzuomk/image/upload/v1751620702/TH16_WarBase.jpg",
     "th17": "https://res.cloudinary.com/dxmtzuomk/image/upload/v1751620702/TH17_WarBase.jpg",
+    "th17_new": "https://res.cloudinary.com/dxmtzuomk/image/upload/v1751620702/TH17_WarBase.jpg",
 }
 
 FWA_ACTIVE_WAR_BASE = {
@@ -45,7 +47,9 @@ FWA_ACTIVE_WAR_BASE = {
     "th14": "https://res.cloudinary.com/dxmtzuomk/image/upload/v1751620703/TH14_Active_WarBase.jpg",
     "th15": "https://res.cloudinary.com/dxmtzuomk/image/upload/v1751620702/TH15_Active_WarBase.jpg",
     "th16": "https://res.cloudinary.com/dxmtzuomk/image/upload/v1751620702/TH16_Active_WarBase.jpg",
+    "th16_new": "https://res.cloudinary.com/dxmtzuomk/image/upload/v1751620702/TH16_Active_WarBase.jpg",
     "th17": "https://res.cloudinary.com/dxmtzuomk/image/upload/v1751620701/TH17_Active_WarBase.jpg",
+    "th17_new": "https://res.cloudinary.com/dxmtzuomk/image/upload/v1751620701/TH17_Active_WarBase.jpg",
 }
 
 # Staff Roles Hierarchy
