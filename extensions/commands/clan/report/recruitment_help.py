@@ -30,7 +30,7 @@ from utils.classes import Clan
 from utils.constants import BLUE_ACCENT, GREEN_ACCENT, RED_ACCENT, GOLD_ACCENT
 from utils.emoji import emojis
 
-from .helpers import get_clan_by_tag, get_clan_options, create_progress_header
+from .helpers import get_clan_by_tag, get_clan_options, get_categorized_clan_components, create_progress_header
 
 # Channel IDs
 RECRUITMENT_CHANNEL = 1378084731874185357
@@ -56,42 +56,36 @@ async def recruitment_help_select(
         await ctx.respond("❌ This button is not for you!", ephemeral=True)
         return
 
-    # Create clan selection
-    clans = await get_clan_options(mongo)
+    # Build component list
+    component_list = [
+        Text(content=create_progress_header(1, 3, ["Select Clan", "Fill Form", "Review"])),
+        Separator(),
+        Text(content="## 📢 Recruitment Help Post"),
+        Text(content="Select the clan you want to post recruitment needs for:"),
+    ]
+
+    # Add categorized clan dropdowns
+    component_list.extend(await get_categorized_clan_components("rh_select_clan", user_id, mongo))
+
+    # Add cancel button and footer
+    component_list.extend([
+        ActionRow(
+            components=[
+                Button(
+                    style=hikari.ButtonStyle.SECONDARY,
+                    label="Cancel",
+                    emoji="❌",
+                    custom_id=f"cancel_report:{user_id}"
+                )
+            ]
+        ),
+        Media(items=[MediaItem(media="assets/Blue_Footer.png")])
+    ])
 
     components = [
         Container(
             accent_color=BLUE_ACCENT,
-            components=[
-                Text(content=create_progress_header(1, 3, ["Select Clan", "Fill Form", "Review"])),
-                Separator(),
-
-                Text(content="## 📢 Recruitment Help Post"),
-                Text(content="Select the clan you want to post recruitment needs for:"),
-
-                ActionRow(
-                    components=[
-                        TextSelectMenu(
-                            custom_id=f"rh_select_clan:{user_id}",
-                            placeholder="Choose a clan...",
-                            options=clans[:25]  # Discord limit
-                        )
-                    ]
-                ),
-
-                ActionRow(
-                    components=[
-                        Button(
-                            style=hikari.ButtonStyle.SECONDARY,
-                            label="Cancel",
-                            emoji="❌",
-                            custom_id=f"cancel_report:{user_id}"
-                        )
-                    ]
-                ),
-
-                Media(items=[MediaItem(media="assets/Blue_Footer.png")])
-            ]
+            components=component_list
         )
     ]
 
@@ -111,6 +105,10 @@ async def rh_clan_selected(
         **kwargs
 ):
     """Handle clan selection and check posting eligibility"""
+    # Parse category prefix from action_id (e.g., "competitive_user123")
+    if "_" in action_id and action_id.split("_")[0] in ["competitive", "zen", "fwa"]:
+        category, action_id = action_id.split("_", 1)
+
     user_id = action_id
     clan_tag = ctx.interaction.values[0]
 

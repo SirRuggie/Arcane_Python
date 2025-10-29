@@ -303,14 +303,28 @@ async def process_user_input(channel_id: int, user_id: int, content: str) -> Non
             progress=progress
         )
 
-        await bot_instance.rest.edit_message(
-            channel=channel_id,
-            message=int(message_id),
-            components=new_components,
-            user_mentions=True
-        )
-
-        print(f"[ClanExpectations] Updated message with new summary")
+        try:
+            await bot_instance.rest.edit_message(
+                channel=channel_id,
+                message=int(message_id),
+                components=new_components,
+                user_mentions=True
+            )
+            print(f"[ClanExpectations] Updated message with new summary")
+        except hikari.errors.NotFoundError:
+            # Message was deleted, create a new one
+            print(f"[ClanExpectations] Original message not found, creating new message")
+            new_msg = await bot_instance.rest.create_message(
+                channel=channel_id,
+                components=new_components,
+                user_mentions=True
+            )
+            # Update message ID in state
+            await mongo_client.ticket_automation_state.update_one(
+                {"_id": str(channel_id)},
+                {"$set": {"messages.questionnaire_future_clan_expectations": str(new_msg.id)}}
+            )
+            print(f"[ClanExpectations] Created new message with ID: {new_msg.id}")
 
     except Exception as e:
         print(f"[ClanExpectations] Error processing input: {e}")

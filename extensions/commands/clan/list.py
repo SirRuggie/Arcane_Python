@@ -48,84 +48,118 @@ class ListCommand(
         clan_data = await mongo.clans.find().to_list(length=None)
         clans     = [Clan(data=d) for d in clan_data]
 
-        # Sort clans by activity/points for consistent ordering
-        clans = sorted(clans, key=lambda c: c.points or 0, reverse=True)
+        # Categorize clans by type (trial clans show in their type category)
+        competitive_clans = [c for c in clans if c.type == "Competitive"]
+        zen_casual_clans = [c for c in clans if c.type in ["Zen", "Casual"]]
+        fwa_clans = [c for c in clans if c.type == "FWA"]
 
-        # Check if pagination is needed (Discord limit is 25 per dropdown)
-        if len(clans) <= 25:
-            # All clans fit in one dropdown - simple mode
-            top_clans = clans
-            remaining_clans = []
-        else:
-            # Too many clans - pagination mode
-            top_clans = clans[:24]
-            remaining_clans = clans[24:]
-
-        options = []
-        seen_tags = {}
-        for c in top_clans:
-            # Handle duplicate clan tags by making values unique
-            if c.tag in seen_tags:
-                seen_tags[c.tag] += 1
-                unique_value = f"{c.tag}_{seen_tags[c.tag]}"
-            else:
-                seen_tags[c.tag] = 0
-                unique_value = c.tag
-
-            kwargs = {"label": c.name, "value": unique_value, "description": c.tag}
-            if getattr(c, "partial_emoji", None):
-                kwargs["emoji"] = c.partial_emoji
-            options.append(SelectOption(**kwargs))
+        # Sort each category by points (activity)
+        competitive_clans = sorted(competitive_clans, key=lambda c: c.points or 0, reverse=True)
+        zen_casual_clans = sorted(zen_casual_clans, key=lambda c: c.points or 0, reverse=True)
+        fwa_clans = sorted(fwa_clans, key=lambda c: c.points or 0, reverse=True)
 
         action_id = str(uuid.uuid4())
 
-        # Store remaining clans in button_store if they exist
-        if remaining_clans:
-            remaining_tags = [c.tag for c in remaining_clans]
-            await mongo.button_store.insert_one({
-                "_id": action_id,
-                "command": "clan_browse",
-                "user_id": ctx.member.id,
-                "remaining_tags": remaining_tags,
-                "page": 0
-            })
+        # Helper function to create dropdown options for a category
+        def create_options(clan_list, max_clans=25):
+            options = []
+            seen_tags = {}
+            clans_to_show = clan_list[:max_clans]
 
-        # Build component list
+            for c in clans_to_show:
+                # Handle duplicate clan tags by making values unique
+                if c.tag in seen_tags:
+                    seen_tags[c.tag] += 1
+                    unique_value = f"{c.tag}_{seen_tags[c.tag]}"
+                else:
+                    seen_tags[c.tag] = 0
+                    unique_value = c.tag
+
+                kwargs = {"label": c.name, "value": unique_value, "description": c.tag}
+                if getattr(c, "partial_emoji", None):
+                    kwargs["emoji"] = c.partial_emoji
+                options.append(SelectOption(**kwargs))
+
+            return options, len(clan_list) > max_clans
+
+        # Build component list with categorized dropdowns
         component_list = [
             Text(content=(
                 "## **Pick Your Clan**\n"
-                "Use the dropdown below to select your clan.\n"
-                "If your clan isn't listed, notify Ruggie."
+                "Clans are organized by category below.\n"
+                "Select a clan from any dropdown to view details."
             )),
-            ActionRow(
-                components=[
-                    TextSelectMenu(
-                        # 2) include the selected user's ID
-                        custom_id=f"clan_select_menu:{action_id}_{self.user.id}",
-                        placeholder="Select a clan",
-                        max_values=1,
-                        options=options,
-                    )
-                ]
-            ),
         ]
 
-        # Add "Show More" button if there are remaining clans
-        if remaining_clans:
-            component_list.append(
+        # Add Main/Competitive dropdown if clans exist
+        if competitive_clans:
+            options, has_overflow = create_options(competitive_clans, max_clans=24)
+            overflow_text = f" ({len(competitive_clans) - 24} more not shown)" if has_overflow else ""
+
+            component_list.extend([
+                Separator(divider=True, spacing=hikari.SpacingType.SMALL),
+                Text(content=f"### <a:AngryGiant:1393193559921918002> **Main/Competitive Clans**{overflow_text}"),
                 ActionRow(
                     components=[
-                        Button(
-                            style=hikari.ButtonStyle.PRIMARY,
-                            custom_id=f"clan_show_more:{action_id}",
-                            label=f"Show More Clans ({len(remaining_clans)} more)",
-                            emoji="🔍"
+                        TextSelectMenu(
+                            custom_id=f"clan_select_menu:competitive_{action_id}_{self.user.id}",
+                            placeholder="Select a Main/Competitive clan",
+                            max_values=1,
+                            options=options,
                         )
                     ]
-                )
-            )
+                ),
+            ])
 
+        # Add Zen & Casual dropdown if clans exist
+        if zen_casual_clans:
+            options, has_overflow = create_options(zen_casual_clans, max_clans=24)
+            overflow_text = f" ({len(zen_casual_clans) - 24} more not shown)" if has_overflow else ""
+
+            component_list.extend([
+                Separator(divider=True, spacing=hikari.SpacingType.SMALL),
+                Text(content=f"### <:BabyYoda:1390465217997312234> **Zen** & <a:Chill:1393193145927340073> **Casual Clans**{overflow_text}"),
+                ActionRow(
+                    components=[
+                        TextSelectMenu(
+                            custom_id=f"clan_select_menu:zen_{action_id}_{self.user.id}",
+                            placeholder="Select a Zen/Casual clan",
+                            max_values=1,
+                            options=options,
+                        )
+                    ]
+                ),
+            ])
+
+        # Add FWA dropdown if clans exist
+        if fwa_clans:
+            options, has_overflow = create_options(fwa_clans, max_clans=24)
+            overflow_text = f" ({len(fwa_clans) - 24} more not shown)" if has_overflow else ""
+
+            component_list.extend([
+                Separator(divider=True, spacing=hikari.SpacingType.SMALL),
+                Text(content=f"### <a:FWA:1387882523358527608> **FWA Clans**{overflow_text}"),
+                ActionRow(
+                    components=[
+                        TextSelectMenu(
+                            custom_id=f"clan_select_menu:fwa_{action_id}_{self.user.id}",
+                            placeholder="Select an FWA clan",
+                            max_values=1,
+                            options=options,
+                        )
+                    ]
+                ),
+            ])
+
+        # Add footer
         component_list.append(Media(items=[MediaItem(media="assets/Red_Footer.png")]))
+
+        # Check if we have any clans to display
+        if not any([competitive_clans, zen_casual_clans, fwa_clans]):
+            component_list = [
+                Text(content="## **No Clans Found**\n⚠️ No clans are currently registered in the system."),
+                Media(items=[MediaItem(media="assets/Red_Footer.png")])
+            ]
 
         components = [
             Container(
@@ -146,6 +180,10 @@ async def on_clan_chosen(
     **kwargs
 ):
     ctx: lightbulb.components.MenuContext = kwargs["ctx"]
+    # Parse category prefix from action_id (e.g., "competitive_uuid_userid")
+    # The category prefix is optional for backwards compatibility
+    if "_" in action_id and action_id.split("_")[0] in ["competitive", "zen", "fwa"]:
+        category, action_id = action_id.split("_", 1)
     _, user_id = action_id.rsplit("_", 1)
     user = await bot.rest.fetch_member(ctx.guild_id, int(user_id))
 
@@ -240,299 +278,4 @@ async def on_clan_chosen(
         components=components,
         user_mentions = [user.id, db_clan.leader_id],
         role_mentions = True,
-    )
-
-
-@register_action("clan_show_more", no_return=True)
-@lightbulb.di.with_di
-async def on_clan_show_more(
-    action_id: str,
-    bot: hikari.GatewayBot = lightbulb.di.INJECTED,
-    mongo: MongoClient      = lightbulb.di.INJECTED,
-    **kwargs
-):
-    """Handle 'Show More' button click to display paginated clan list."""
-    ctx: lightbulb.components.MenuContext = kwargs["ctx"]
-
-    # Fetch stored data
-    stored_data = await mongo.button_store.find_one({"_id": action_id})
-    if not stored_data:
-        await ctx.interaction.edit_initial_response(
-            components=[
-                Container(
-                    accent_color=RED_ACCENT,
-                    components=[Text(content="⚠️ Session expired. Please run the command again.")]
-                )
-            ]
-        )
-        return
-
-    remaining_tags = stored_data.get("remaining_tags", [])
-    current_page = stored_data.get("page", 0)
-    user_id = stored_data.get("user_id")
-
-    # Fetch clan data for remaining tags
-    clan_data = await mongo.clans.find({"tag": {"$in": remaining_tags}}).to_list(length=None)
-    remaining_clans = [Clan(data=d) for d in clan_data]
-
-    # Sort by original order (already sorted by points)
-    remaining_clans = sorted(
-        remaining_clans,
-        key=lambda c: remaining_tags.index(c.tag) if c.tag in remaining_tags else 999
-    )
-
-    # Pagination - treat dropdown as page 1, this view as page 2+
-    clans_per_page = 25
-    total_clans_in_db = len(remaining_clans) + 24  # Include the 24 clans shown in dropdown
-    remaining_pages = (len(remaining_clans) + clans_per_page - 1) // clans_per_page
-    total_pages = 1 + remaining_pages  # +1 for the dropdown page
-    current_page = max(0, min(current_page, remaining_pages - 1))
-    display_page = current_page + 2  # +2 because dropdown is page 1, this starts at page 2
-
-    # Calculate indices for display (relative to clans_on_page array)
-    start_idx_in_array = current_page * clans_per_page
-    end_idx_in_array = min(start_idx_in_array + clans_per_page, len(remaining_clans))
-    clans_on_page = remaining_clans[start_idx_in_array:end_idx_in_array]
-
-    # Calculate indices for display text (relative to ALL clans including dropdown)
-    start_idx_display = 24 + (current_page * clans_per_page)  # Start after dropdown's 24 clans
-    end_idx_display = start_idx_display + len(clans_on_page)
-
-    # Build options for current page
-    options = []
-    seen_tags = {}
-    for c in clans_on_page:
-        if c.tag in seen_tags:
-            seen_tags[c.tag] += 1
-            unique_value = f"{c.tag}_{seen_tags[c.tag]}"
-        else:
-            seen_tags[c.tag] = 0
-            unique_value = c.tag
-
-        kwargs = {"label": c.name, "value": unique_value, "description": c.tag}
-        if getattr(c, "partial_emoji", None):
-            kwargs["emoji"] = c.partial_emoji
-        options.append(SelectOption(**kwargs))
-
-    # Build components
-    component_list = [
-        Text(content=f"## **Browse All Clans**"),
-        Text(content=f"**Page {display_page} of {total_pages}** • Showing clans {start_idx_display + 1}-{end_idx_display} of {total_clans_in_db} total"),
-        Separator(divider=True),
-        ActionRow(
-            components=[
-                TextSelectMenu(
-                    custom_id=f"clan_select_menu:{action_id}_{user_id}",
-                    placeholder="Select a clan",
-                    max_values=1,
-                    options=options,
-                )
-            ]
-        ),
-    ]
-
-    # Always add navigation buttons (back button + pagination if needed)
-    navigation_buttons = []
-
-    # Always show "Back to List" button
-    navigation_buttons.append(
-        Button(
-            style=hikari.ButtonStyle.PRIMARY,
-            custom_id=f"clan_back_to_list:{action_id}",
-            label="Back to List",
-            emoji="⬅️"
-        )
-    )
-
-    # Add pagination buttons if multiple pages of remaining clans
-    if remaining_pages > 1:
-        if current_page > 0:
-            navigation_buttons.append(
-                Button(
-                    style=hikari.ButtonStyle.SECONDARY,
-                    custom_id=f"clan_browse_prev:{action_id}",
-                    label="Previous",
-                    emoji="◀️"
-                )
-            )
-
-        if current_page < remaining_pages - 1:
-            navigation_buttons.append(
-                Button(
-                    style=hikari.ButtonStyle.SECONDARY,
-                    custom_id=f"clan_browse_next:{action_id}",
-                    label="Next",
-                    emoji="▶️"
-                )
-            )
-
-    component_list.append(
-        ActionRow(components=navigation_buttons)
-    )
-
-    component_list.append(Media(items=[MediaItem(media="assets/Red_Footer.png")]))
-
-    await ctx.interaction.edit_initial_response(
-        components=[
-            Container(
-                accent_color=RED_ACCENT,
-                components=component_list
-            )
-        ]
-    )
-
-
-@register_action("clan_browse_next", no_return=True)
-@lightbulb.di.with_di
-async def on_clan_browse_next(
-    action_id: str,
-    mongo: MongoClient = lightbulb.di.INJECTED,
-    **kwargs
-):
-    """Handle 'Next Page' button click."""
-    ctx: lightbulb.components.MenuContext = kwargs["ctx"]
-
-    # Update page in button_store
-    stored_data = await mongo.button_store.find_one({"_id": action_id})
-    if stored_data:
-        current_page = stored_data.get("page", 0)
-        await mongo.button_store.update_one(
-            {"_id": action_id},
-            {"$set": {"page": current_page + 1}}
-        )
-
-    # Re-render with new page
-    await on_clan_show_more(action_id, mongo=mongo, ctx=ctx)
-
-
-@register_action("clan_browse_prev", no_return=True)
-@lightbulb.di.with_di
-async def on_clan_browse_prev(
-    action_id: str,
-    mongo: MongoClient = lightbulb.di.INJECTED,
-    **kwargs
-):
-    """Handle 'Previous Page' button click."""
-    ctx: lightbulb.components.MenuContext = kwargs["ctx"]
-
-    # Update page in button_store
-    stored_data = await mongo.button_store.find_one({"_id": action_id})
-    if stored_data:
-        current_page = stored_data.get("page", 0)
-        await mongo.button_store.update_one(
-            {"_id": action_id},
-            {"$set": {"page": max(0, current_page - 1)}}
-        )
-
-    # Re-render with new page
-    await on_clan_show_more(action_id, mongo=mongo, ctx=ctx)
-
-
-@register_action("clan_back_to_list", no_return=True)
-@lightbulb.di.with_di
-async def on_clan_back_to_list(
-    action_id: str,
-    mongo: MongoClient = lightbulb.di.INJECTED,
-    **kwargs
-):
-    """Handle 'Back to List' button click - return to dropdown view."""
-    ctx: lightbulb.components.MenuContext = kwargs["ctx"]
-
-    # Fetch stored data to get user_id
-    stored_data = await mongo.button_store.find_one({"_id": action_id})
-    if not stored_data:
-        await ctx.interaction.edit_initial_response(
-            components=[
-                Container(
-                    accent_color=RED_ACCENT,
-                    components=[Text(content="⚠️ Session expired. Please run the command again.")]
-                )
-            ]
-        )
-        return
-
-    user_id = stored_data.get("user_id")
-
-    # Re-fetch and rebuild original dropdown view
-    clan_data = await mongo.clans.find().to_list(length=None)
-    clans = [Clan(data=d) for d in clan_data]
-
-    # Sort clans by activity/points for consistent ordering
-    clans = sorted(clans, key=lambda c: c.points or 0, reverse=True)
-
-    # Check if pagination is needed (Discord limit is 25 per dropdown)
-    if len(clans) <= 25:
-        top_clans = clans
-        remaining_clans = []
-    else:
-        top_clans = clans[:24]
-        remaining_clans = clans[24:]
-
-    # Build options for dropdown
-    options = []
-    seen_tags = {}
-    for c in top_clans:
-        if c.tag in seen_tags:
-            seen_tags[c.tag] += 1
-            unique_value = f"{c.tag}_{seen_tags[c.tag]}"
-        else:
-            seen_tags[c.tag] = 0
-            unique_value = c.tag
-
-        kwargs_dict = {"label": c.name, "value": unique_value, "description": c.tag}
-        if getattr(c, "partial_emoji", None):
-            kwargs_dict["emoji"] = c.partial_emoji
-        options.append(SelectOption(**kwargs_dict))
-
-    # Update remaining_tags in button_store
-    if remaining_clans:
-        remaining_tags = [c.tag for c in remaining_clans]
-        await mongo.button_store.update_one(
-            {"_id": action_id},
-            {"$set": {"remaining_tags": remaining_tags, "page": 0}}
-        )
-
-    # Build component list
-    component_list = [
-        Text(content=(
-            "## **Pick Your Clan**\n"
-            "Use the dropdown below to select your clan.\n"
-            "If your clan isn't listed, notify Ruggie."
-        )),
-        ActionRow(
-            components=[
-                TextSelectMenu(
-                    custom_id=f"clan_select_menu:{action_id}_{user_id}",
-                    placeholder="Select a clan",
-                    max_values=1,
-                    options=options,
-                )
-            ]
-        ),
-    ]
-
-    # Add "Show More" button if there are remaining clans
-    if remaining_clans:
-        component_list.append(
-            ActionRow(
-                components=[
-                    Button(
-                        style=hikari.ButtonStyle.PRIMARY,
-                        custom_id=f"clan_show_more:{action_id}",
-                        label=f"Show More Clans ({len(remaining_clans)} more)",
-                        emoji="🔍"
-                    )
-                ]
-            )
-        )
-
-    component_list.append(Media(items=[MediaItem(media="assets/Red_Footer.png")]))
-
-    await ctx.interaction.edit_initial_response(
-        components=[
-            Container(
-                accent_color=RED_ACCENT,
-                components=component_list,
-            )
-        ]
     )

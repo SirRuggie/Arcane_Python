@@ -36,6 +36,7 @@ from utils.constants import BLUE_ACCENT, GREEN_ACCENT, MAGENTA_ACCENT, RED_ACCEN
 
 from .helpers import (
     get_clan_options,
+    get_categorized_clan_components,
     create_progress_header,
     validate_discord_id,
     create_submission_data,
@@ -62,39 +63,37 @@ async def show_dm_recruitment_flow(
         mongo: MongoClient = lightbulb.di.INJECTED
 ):
     """Show the DM recruitment reporting flow - Step 1: Clan Selection"""
+    # Build component list
+    component_list = [
+        Text(content=create_progress_header(1, 4, ["Select Clan", "Select User", "Enter Details", "Review"])),
+        Separator(),
+        Text(content="## 🏰 Select Your Clan"),
+        Text(content="Which clan recruited the new member?"),
+    ]
+
+    # Add categorized clan dropdowns
+    component_list.extend(await get_categorized_clan_components("dm_select_clan", user_id, mongo))
+
+    # Add cancel button and footer
+    component_list.extend([
+        ActionRow(
+            components=[
+                Button(
+                    style=hikari.ButtonStyle.SECONDARY,
+                    label="Cancel",
+                    emoji="❌",
+                    custom_id=f"cancel_report:{user_id}"
+                )
+            ]
+        ),
+        Text(content="-# Select the clan where you recruited a member via DM"),
+        Media(items=[MediaItem(media="assets/Blue_Footer.png")])
+    ])
+
     components = [
         Container(
             accent_color=BLUE_ACCENT,
-            components=[
-                Text(content=create_progress_header(1, 4, ["Select Clan", "Select User", "Enter Details", "Review"])),
-                Separator(),
-
-                Text(content="## 🏰 Select Your Clan"),
-                Text(content="Which clan recruited the new member?"),
-
-                ActionRow(
-                    components=[
-                        TextSelectMenu(
-                            custom_id=f"dm_select_clan:{user_id}",
-                            placeholder="Choose a clan...",
-                            options=await get_clan_options(mongo)
-                        )
-                    ]
-                ),
-                ActionRow(
-                    components=[
-                        Button(
-                            style=hikari.ButtonStyle.SECONDARY,
-                            label="Cancel",
-                            emoji="❌",
-                            custom_id=f"cancel_report:{user_id}"
-                        )
-                    ]
-                ),
-
-                Text(content="-# Select the clan where you recruited a member via DM"),
-                Media(items=[MediaItem(media="assets/Blue_Footer.png")])
-            ]
+            components=component_list
         )
     ]
 
@@ -102,7 +101,7 @@ async def show_dm_recruitment_flow(
 
 
 # Handler to restart DM recruitment flow
-@register_action("show_dm_recruitment")
+@register_action("show_dm_recruitment", no_return=True)
 @lightbulb.di.with_di
 async def restart_dm_recruitment(
         ctx: lightbulb.components.MenuContext,
@@ -112,7 +111,7 @@ async def restart_dm_recruitment(
 ):
     """Restart the DM recruitment flow"""
     user_id = action_id
-    return await show_dm_recruitment_flow(ctx, user_id, mongo)
+    await show_dm_recruitment_flow(ctx, user_id, mongo)
 
 
 # ╔══════════════════════════════════════════════════════════╗
@@ -128,6 +127,10 @@ async def dm_select_clan(
         **kwargs
 ):
     """Handle clan selection for DM recruitment - show user selection"""
+    # Parse category prefix from action_id (e.g., "competitive_user123")
+    if "_" in action_id and action_id.split("_")[0] in ["competitive", "zen", "fwa"]:
+        category, action_id = action_id.split("_", 1)
+
     user_id = action_id
     selected_clan = ctx.interaction.values[0]
     

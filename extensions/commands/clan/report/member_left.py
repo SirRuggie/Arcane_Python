@@ -22,7 +22,7 @@ from extensions.components import register_action
 from utils.constants import RED_ACCENT, GREEN_ACCENT, GOLD_ACCENT
 from utils.mongo import MongoClient
 from utils.emoji import emojis
-from extensions.commands.clan.report.helpers import get_clan_by_tag, get_clan_options, create_progress_header
+from extensions.commands.clan.report.helpers import get_clan_by_tag, get_clan_options, get_categorized_clan_components, create_progress_header
 
 # Add the loader for proper integration
 loader = lightbulb.Loader()
@@ -89,10 +89,18 @@ async def show_member_left_flow(
         await ctx.respond("❌ This menu is not for you!", ephemeral=True)
         return
 
-    # Get clan options for the user
-    clan_options = await get_clan_options(mongo)
+    # Build component list
+    component_list = [
+        Text(content=create_progress_header(1, 2, ["Select Clan", "Select Member"])),
+        Separator(divider=True),
+        Text(content="## 🏰 Select Clan"),
+        Text(content="Choose the clan to check for member refunds:"),
+    ]
 
-    if not clan_options:
+    # Add categorized clan dropdowns
+    categorized_components = await get_categorized_clan_components("member_left_clan", str(user_id), mongo)
+
+    if not categorized_components:
         components = [
             Container(
                 accent_color=RED_ACCENT,
@@ -115,38 +123,27 @@ async def show_member_left_flow(
         await ctx.respond(components=components, edit=True)
         return
 
+    component_list.extend(categorized_components)
+
+    # Add cancel button and footer
+    component_list.extend([
+        ActionRow(
+            components=[
+                Button(
+                    style=hikari.ButtonStyle.SECONDARY,
+                    label="Cancel",
+                    custom_id=f"report_home:{user_id}"
+                )
+            ]
+        ),
+        Media(items=[MediaItem(media="assets/Gold_Footer.png")])
+    ])
+
     # Create clan selection menu
     components = [
         Container(
             accent_color=GOLD_ACCENT,
-            components=[
-                Text(content=create_progress_header(1, 2, ["Select Clan", "Select Member"])),
-                Separator(divider=True),
-                Text(content="## 🏰 Select Clan"),
-                Text(content="Choose the clan to check for member refunds:"),
-
-                ActionRow(
-                    components=[
-                        TextSelectMenu(
-                            placeholder="Choose a clan...",
-                            custom_id=f"member_left_clan:{user_id}",
-                            options=clan_options
-                        )
-                    ]
-                ),
-
-                ActionRow(
-                    components=[
-                        Button(
-                            style=hikari.ButtonStyle.SECONDARY,
-                            label="Cancel",
-                            custom_id=f"report_home:{user_id}"
-                        )
-                    ]
-                ),
-
-                Media(items=[MediaItem(media="assets/Gold_Footer.png")])
-            ]
+            components=component_list
         )
     ]
 
@@ -162,6 +159,9 @@ async def handle_clan_selection(
         **kwargs
 ):
     """Handle clan selection - Step 2: Show eligible members"""
+    # Parse category prefix from action_id (e.g., "competitive_user123")
+    if "_" in action_id and action_id.split("_")[0] in ["competitive", "zen", "fwa"]:
+        category, action_id = action_id.split("_", 1)
 
     user_id = int(action_id)
 

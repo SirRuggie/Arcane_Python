@@ -14,6 +14,7 @@ from hikari.impl import (
     SelectOptionBuilder as SelectOption,
     ContainerComponentBuilder as Container,
     TextDisplayComponentBuilder as Text,
+    SeparatorComponentBuilder as Separator,
     MediaGalleryComponentBuilder as Media,
     MediaGalleryItemBuilder as MediaItem,
 )
@@ -37,34 +38,28 @@ class Welcome(
         mongo: MongoClient = lightbulb.di.INJECTED,
     ) -> None:
         await ctx.defer(ephemeral=True)
-        
+
         # Get user's clans where they have leader role
         user_roles = ctx.interaction.member.role_ids
         clan_data = await mongo.clans.find({
             "leader_role_id": {"$in": user_roles}
         }).to_list(length=None)
-        
+
         if not clan_data:
             await ctx.respond("You must have a clan leader role to send welcome messages.", ephemeral=True)
             return
-            
+
         clans = [Clan(data=d) for d in clan_data]
 
-        options = []
-        seen_tags = {}
-        for c in clans:
-            # Handle duplicate clan tags by making values unique
-            if c.tag in seen_tags:
-                seen_tags[c.tag] += 1
-                unique_value = f"{c.tag}_{seen_tags[c.tag]}"
-            else:
-                seen_tags[c.tag] = 0
-                unique_value = c.tag
+        # Categorize clans by type (trial clans show in their type category)
+        competitive_clans = [c for c in clans if c.type == "Competitive"]
+        zen_casual_clans = [c for c in clans if c.type in ["Zen", "Casual"]]
+        fwa_clans = [c for c in clans if c.type == "FWA"]
 
-            kwargs = {"label": c.name, "value": unique_value, "description": c.tag}
-            if getattr(c, "partial_emoji", None):
-                kwargs["emoji"] = c.partial_emoji
-            options.append(SelectOption(**kwargs))
+        # Sort each category by points (activity)
+        competitive_clans = sorted(competitive_clans, key=lambda c: c.points or 0, reverse=True)
+        zen_casual_clans = sorted(zen_casual_clans, key=lambda c: c.points or 0, reverse=True)
+        fwa_clans = sorted(fwa_clans, key=lambda c: c.points or 0, reverse=True)
 
         action_id = str(uuid.uuid4())
 
@@ -75,28 +70,111 @@ class Welcome(
             "invoker_id": ctx.user.id
         })
 
+        # Helper function to create dropdown options for a category
+        def create_options(clan_list, max_clans=25):
+            options = []
+            seen_tags = {}
+            clans_to_show = clan_list[:max_clans]
+
+            for c in clans_to_show:
+                # Handle duplicate clan tags by making values unique
+                if c.tag in seen_tags:
+                    seen_tags[c.tag] += 1
+                    unique_value = f"{c.tag}_{seen_tags[c.tag]}"
+                else:
+                    seen_tags[c.tag] = 0
+                    unique_value = c.tag
+
+                kwargs = {"label": c.name, "value": unique_value, "description": c.tag}
+                if getattr(c, "partial_emoji", None):
+                    kwargs["emoji"] = c.partial_emoji
+                options.append(SelectOption(**kwargs))
+
+            return options, len(clan_list) > max_clans
+
+        # Build component list with categorized dropdowns
+        component_list = [
+            Text(content=(
+                "## **Pick Your Clan to Welcome From**\n"
+                "Clans are organized by category below.\n"
+                f"This will be sent to {self.user.mention}."
+            )),
+        ]
+
+        # Add Main/Competitive dropdown if clans exist
+        if competitive_clans:
+            options, has_overflow = create_options(competitive_clans, max_clans=24)
+            overflow_text = f" ({len(competitive_clans) - 24} more not shown)" if has_overflow else ""
+
+            component_list.extend([
+                Separator(divider=True, spacing=hikari.SpacingType.SMALL),
+                Text(content=f"### <a:AngryGiant:1393193559921918002> **Main/Competitive Clans**{overflow_text}"),
+                ActionRow(
+                    components=[
+                        TextSelectMenu(
+                            custom_id=f"clan_welcome_select:competitive_{action_id}",
+                            placeholder="Select a Main/Competitive clan",
+                            max_values=1,
+                            options=options,
+                        )
+                    ]
+                ),
+            ])
+
+        # Add Zen & Casual dropdown if clans exist
+        if zen_casual_clans:
+            options, has_overflow = create_options(zen_casual_clans, max_clans=24)
+            overflow_text = f" ({len(zen_casual_clans) - 24} more not shown)" if has_overflow else ""
+
+            component_list.extend([
+                Separator(divider=True, spacing=hikari.SpacingType.SMALL),
+                Text(content=f"### <:BabyYoda:1390465217997312234> **Zen** & <a:Chill:1393193145927340073> **Casual Clans**{overflow_text}"),
+                ActionRow(
+                    components=[
+                        TextSelectMenu(
+                            custom_id=f"clan_welcome_select:zen_{action_id}",
+                            placeholder="Select a Zen/Casual clan",
+                            max_values=1,
+                            options=options,
+                        )
+                    ]
+                ),
+            ])
+
+        # Add FWA dropdown if clans exist
+        if fwa_clans:
+            options, has_overflow = create_options(fwa_clans, max_clans=24)
+            overflow_text = f" ({len(fwa_clans) - 24} more not shown)" if has_overflow else ""
+
+            component_list.extend([
+                Separator(divider=True, spacing=hikari.SpacingType.SMALL),
+                Text(content=f"### <a:FWA:1387882523358527608> **FWA Clans**{overflow_text}"),
+                ActionRow(
+                    components=[
+                        TextSelectMenu(
+                            custom_id=f"clan_welcome_select:fwa_{action_id}",
+                            placeholder="Select an FWA clan",
+                            max_values=1,
+                            options=options,
+                        )
+                    ]
+                ),
+            ])
+
+        # Add footer
+        component_list.append(Media(items=[MediaItem(media="assets/Red_Footer.png")]))
+
+        # Check if we have any clans to display
+        if not any([competitive_clans, zen_casual_clans, fwa_clans]):
+            component_list = [
+                Text(content="## **No Clans Found**\n⚠️ You don't have a leader role in any clans."),
+                Media(items=[MediaItem(media="assets/Red_Footer.png")])
+            ]
+
         components = [
             Container(
                 accent_color=RED_ACCENT,
-                components=[
-                    Text(content=(
-                        "## **Pick Your Clan to Welcome From**\n"
-                        "Use the dropdown below to select which clan's welcome message to send.\n"
-                        f"Only clans where you have a leader role are shown.\n"
-                        f"This will be sent to {self.user.mention}."
-                    )),
-                    ActionRow(
-                        components=[
-                            TextSelectMenu(
-                                custom_id=f"clan_welcome_select:{action_id}",
-                                placeholder="Select a clan",
-                                max_values=1,
-                                options=options,
-                            )
-                        ]
-                    ),
-                    Media(items=[MediaItem(media="assets/Red_Footer.png")]),
-                ],
+                components=component_list,
             )
         ]
         await ctx.respond(components=components, ephemeral=True)
@@ -111,7 +189,12 @@ async def on_clan_welcome_chosen(
     **kwargs
 ):
     ctx: lightbulb.components.MenuContext = kwargs["ctx"]
-    
+
+    # Parse category prefix from action_id (e.g., "competitive_uuid")
+    # The category prefix is optional for backwards compatibility
+    if "_" in action_id and action_id.split("_")[0] in ["competitive", "zen", "fwa"]:
+        category, action_id = action_id.split("_", 1)
+
     # Get stored data
     store_data = await mongo.button_store.find_one({"_id": action_id})
     if not store_data:

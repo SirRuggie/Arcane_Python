@@ -30,6 +30,7 @@ from utils.constants import BLUE_ACCENT, GREEN_ACCENT, MAGENTA_ACCENT, RED_ACCEN
 
 from .helpers import (
     get_clan_options,
+    get_categorized_clan_components,
     create_progress_header,
     parse_discord_link,
     create_submission_data,
@@ -48,39 +49,36 @@ async def show_discord_post_flow(
         user_id: str,
         mongo: MongoClient = lightbulb.di.INJECTED
 ):
+    # Build component list
+    component_list = [
+        Text(content=create_progress_header(1, 3, ["Select Clan", "Add Link", "Review"])),
+        Separator(),
+        Text(content="## 🏰 Select Your Clan"),
+        Text(content="Which clan recruited the new member?"),
+    ]
+
+    # Add categorized clan dropdowns
+    component_list.extend(await get_categorized_clan_components("dp_select_clan", user_id, mongo))
+
+    # Add cancel button and footer
+    component_list.extend([
+        ActionRow(
+            components=[
+                Button(
+                    style=hikari.ButtonStyle.SECONDARY,
+                    label="Cancel",
+                    emoji="❌",
+                    custom_id=f"cancel_report:{user_id}"
+                )
+            ]
+        ),
+        Media(items=[MediaItem(media="assets/Blue_Footer.png")])
+    ])
+
     components = [
         Container(
             accent_color=BLUE_ACCENT,
-            components=[
-                Text(content=create_progress_header(1, 3, ["Select Clan", "Add Link", "Review"])),
-                Separator(),
-
-                Text(content="## 🏰 Select Your Clan"),
-                Text(content="Which clan recruited the new member?"),
-
-                ActionRow(
-                    components=[
-                        TextSelectMenu(
-                            custom_id=f"dp_select_clan:{user_id}",
-                            placeholder="Choose a clan...",
-                            options=await get_clan_options(mongo)
-                        )
-                    ]
-                ),
-
-                ActionRow(
-                    components=[
-                        Button(
-                            style=hikari.ButtonStyle.SECONDARY,
-                            label="Cancel",
-                            emoji="❌",
-                            custom_id=f"cancel_report:{user_id}"
-                        )
-                    ]
-                ),
-
-                Media(items=[MediaItem(media="assets/Blue_Footer.png")])
-            ]
+            components=component_list
         )
     ]
 
@@ -96,6 +94,10 @@ async def dp_handle_clan_selection(
         action_id: str,
         **kwargs
 ):
+    # Parse category prefix from action_id (e.g., "competitive_user123")
+    if "_" in action_id and action_id.split("_")[0] in ["competitive", "zen", "fwa"]:
+        category, action_id = action_id.split("_", 1)
+
     user_id = action_id
     selected_value = ctx.interaction.values[0]
 
