@@ -1436,22 +1436,22 @@ async def handle_multiple_bids(
     else:
         winning_bid = bids[0]
 
-    # Deduct points from winner
+    # Deduct points from winner and release placeholder hold
     winning_clan = await mongo.clans.find_one({"tag": winning_bid["clan_tag"]})
     if winning_clan:
-        # Deduct actual points
+        # Deduct actual points AND release placeholder in one atomic operation
+        # This converts the placeholder hold into an actual payment
         await mongo.clans.update_one(
             {"tag": winning_bid["clan_tag"]},
             {
                 "$inc": {
-                    "points": -winning_bid["amount"]
+                    "points": -winning_bid["amount"],  # Deduct actual points (payment)
+                    "placeholder_points": -winning_bid["amount"]  # Release the hold
                 }
             }
         )
-        # Safely adjust placeholder points
-        await safe_adjust_placeholder_points(mongo, winning_bid["clan_tag"], -winning_bid["amount"])
 
-    # Refund placeholder points for losers
+    # Silently release placeholder points for losing clans (no refund needed - they never paid)
     for bid in bids:
         if bid["clan_tag"] != winning_bid["clan_tag"]:
             await safe_adjust_placeholder_points(mongo, bid["clan_tag"], -bid["amount"])
@@ -1518,6 +1518,14 @@ async def handle_multiple_bids(
         channel=thread_id,
         components=components,
         role_mentions=[winning_clan['leader_role_id']] if winning_clan else []
+    )
+
+    # Send success message to feed channel
+    log_channel = await bot.rest.fetch_channel(LOG_CHANNEL_ID)
+    winning_clan_obj = Clan(data=winning_clan) if winning_clan else None
+    await log_channel.send(
+        f"🏆 **Multi-Bid Win**: {winning_clan_obj.name if winning_clan_obj else 'Unknown'} won {recruit['player_name']} "
+        f"for {winning_bid['amount']} points ({len(bids)} bids total)"
     )
 
     # Finalize the auction

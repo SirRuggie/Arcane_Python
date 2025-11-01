@@ -436,20 +436,23 @@ async def process_with_bids_recruitment(recruit: Dict, bid_data: Dict, player_cl
             print(f"[CRITICAL] Bidding not finalized - ticket closed before timer expired")
             print(f"[CRITICAL] Deducting {winning_amount} points from {winner_tag} now")
 
-            # Deduct actual points (since bidding timer never ran)
-            await mongo_client.clans.update_one(
-                {"tag": winner_tag},
-                {"$inc": {"points": -winning_amount}}
-            )
-
             # Import and use safe_adjust_placeholder_points
             from extensions.commands.recruit.bidding import safe_adjust_placeholder_points
 
-            # Release placeholder points for winner
-            await safe_adjust_placeholder_points(mongo_client, winner_tag, -winning_amount)
+            # Deduct actual points AND release placeholder in one atomic operation
+            # This converts the placeholder hold into an actual payment
+            await mongo_client.clans.update_one(
+                {"tag": winner_tag},
+                {
+                    "$inc": {
+                        "points": -winning_amount,  # Deduct actual points (payment)
+                        "placeholder_points": -winning_amount  # Release the hold
+                    }
+                }
+            )
             print(f"[INFO] Deducted {winning_amount} points and released placeholder for {winner_tag}")
 
-            # Release placeholder points for ALL other bidders (they didn't win)
+            # Silently release placeholder points for ALL losing bidders (no refund - they never paid)
             if bid_data.get("bids"):
                 for bid in bid_data["bids"]:
                     if bid["clan_tag"] != winner_tag:
@@ -495,6 +498,27 @@ async def process_with_bids_recruitment(recruit: Dict, bid_data: Dict, player_cl
         
         # Send success notification to recruitment log
         if db_clan:
+            # Detect if this was a single bid (no competition) or multi-bid
+            is_single_bid = len(bid_data.get("bids", [])) == 1
+
+            # Build different messages for single vs multi-bid
+            if is_single_bid:
+                recruitment_details = (
+                    f"{db_clan.get('name', 'Unknown')} successfully recruited {recruit.get('player_name', 'Unknown')} "
+                    f"through the bidding system.\n\n"
+                    f"**Single Bid (No Competition):** {winning_amount} points bid\n"
+                    f"**Points Deducted:** 0 (uncontested recruitment)\n"
+                    f"• Clan still has **{remaining_points:.1f}** points remaining."
+                )
+            else:
+                recruitment_details = (
+                    f"{db_clan.get('name', 'Unknown')} successfully recruited {recruit.get('player_name', 'Unknown')} "
+                    f"through the bidding system.\n\n"
+                    f"**Winning Bid:** {winning_amount} points\n"
+                    f"**Points Deducted:** {winning_amount} points\n"
+                    f"• Clan now has **{remaining_points:.1f}** points remaining."
+                )
+
             success_components = [
                 Container(
                     accent_color=GREEN_ACCENT,
@@ -505,12 +529,7 @@ async def process_with_bids_recruitment(recruit: Dict, bid_data: Dict, player_cl
                         )),
                         Separator(divider=True),
                         Text(content="### Recruitment Details:"),
-                        Text(content=(
-                            f"{db_clan.get('name', 'Unknown')} successfully recruited {recruit.get('player_name', 'Unknown')} "
-                            f"through the bidding system.\n\n"
-                            f"**Winning Bid:** {winning_amount} points\n"
-                            f"• Clan now has **{remaining_points:.1f}** points remaining."
-                        )),
+                        Text(content=recruitment_details),
                         Separator(divider=True),
                         Text(content="### Player Details"),
                         Text(content=(

@@ -145,7 +145,7 @@ Arcane_Python/
 - **Automated Ticket System**: Complete recruitment workflow
 - **Candidate Processing**: Application review and management
 - **Question Flows**: Automated questionnaires with timing (15-20 minutes)
-- **Bidding System**: Clan bidding for recruits
+- **Bidding System**: Clan bidding for recruits (see detailed documentation below)
 
 ### Manual Ticket Management (`ticket/`)
 - **Manual Ticket Creation** (`/ticket create`): Create recruitment tickets when ClashKing fails
@@ -217,6 +217,234 @@ py main.py
 ```bash
 pip install -r requirements.txt
 ```
+
+## Clan Bidding System - Complete Documentation
+
+### Overview
+The bidding system allows clans to compete for new recruits by placing point-based bids. The system uses **placeholder points** in MongoDB to "hold" bid amounts during the auction, then converts them to actual point deductions when a winner is determined.
+
+### Key Components
+
+**Files:**
+- `extensions/commands/recruit/bidding.py` - Main bidding logic and auction handling
+- `extensions/events/channel/ticket_close_monitor.py` - Processes ticket closure and finalizes recruitment
+
+**MongoDB Collections:**
+- `clans` - Contains `points` (actual available points) and `placeholder_points` (held for active bids)
+- `clan_bidding` - Tracks active auctions with `bids[]`, `is_finalized`, `winner`, `amount`
+- `new_recruits` - Tracks recruit status with `activeBid` flag
+
+**Important Constants:**
+- `LOG_CHANNEL_ID = 1381395856317747302` - Feed channel for bid logs (in bidding.py)
+- `RECRUITMENT_LOG_CHANNEL = 1345589195695194113` - Feed channel for recruitment logs (in ticket_close_monitor.py)
+
+### Point System Logic
+
+#### Placeholder Points Concept
+- **Purpose**: Hold points during bidding without actually deducting them
+- **How it works**:
+  - When clan bids X points → `placeholder_points += X`
+  - Available points = `points - placeholder_points`
+  - When auction ends → Convert placeholder to actual deduction (winner) or release hold (losers)
+
+#### MongoDB Operations
+
+**During Bidding** (placing a bid):
+```python
+# Add to placeholder_points (holds the bid amount)
+await mongo.clans.update_one(
+    {"tag": clan_tag},
+    {"$inc": {"placeholder_points": bid_amount}}
+)
+```
+
+**When Winner Determined** (single atomic operation):
+```python
+# Winner: Deduct actual points AND release placeholder
+await mongo.clans.update_one(
+    {"tag": winner_tag},
+    {
+        "$inc": {
+            "points": -winning_amount,           # Deduct actual points (payment)
+            "placeholder_points": -winning_amount  # Release the hold
+        }
+    }
+)
+
+# Losers: Silently release placeholder (no actual deduction)
+await safe_adjust_placeholder_points(mongo, loser_tag, -bid_amount)
+```
+
+**CRITICAL**: Never deduct points AND adjust placeholder separately - this causes **double deduction bug**!
+
+### Bidding Flow
+
+#### 1. Bid Placement
+- Clan places bid through UI
+- System checks available points: `points - placeholder_points >= bid_amount`
+- If valid: `placeholder_points += bid_amount`
+- Bid stored in `clan_bidding` collection
+
+#### 2. Auction Timer
+- Default: 2 hours after first bid
+- Timer can be extended by new bids
+- When timer expires → Determines winner automatically
+
+#### 3. Winner Determination
+
+**Scenario A: Multiple Bids**
+- Location: `bidding.py` - `handle_multiple_bids()` (lines ~1416-1541)
+- Highest bid wins (random tiebreaker if tied)
+- Winner: Deduct actual points + release placeholder (atomic operation)
+- Losers: Release placeholder only (silent, no messages)
+- Sets `is_finalized = True` in MongoDB
+- Sends success message to LOG_CHANNEL_ID
+- Sends announcement in ticket thread with winner ping
+
+**Scenario B: Single Bid (No Competition)**
+- Location: `bidding.py` - `handle_single_bid()` (lines ~1342-1413)
+- Winner gets recruit for FREE (placeholder released, no actual deduction)
+- Sets `is_finalized = True` in MongoDB
+- Sends log message to LOG_CHANNEL_ID
+- Sends announcement in ticket thread
+
+#### 4. Ticket Closure & Finalization
+
+**Location**: `ticket_close_monitor.py` - `process_with_bids_recruitment()` (lines ~380-650)
+
+**Case 1: Recruit Joins Winning Clan (SUCCESS)**
+- Check `is_finalized` flag:
+  - **If finalized** (timer completed): Points already deducted, do nothing
+  - **If NOT finalized** (ticket closed early): Deduct points + release placeholder now
+- Send success message to RECRUITMENT_LOG_CHANNEL (lines 496-539)
+- Shows: Winner name, bid amount, remaining points, player details
+- NO messages for losing clans (they never paid)
+
+**Case 2: Recruit Joins Different Clan or No Clan (FAILURE)**
+- Check `is_finalized` flag:
+  - **If finalized**: Refund actual points to winner (they already paid)
+  - **If NOT finalized**: Just release placeholder (they never paid)
+- Send failure/refund message to RECRUITMENT_LOG_CHANNEL (lines 574-612)
+- Shows: Winner name, refund amount, where recruit actually went
+- Release placeholder for ALL losing bidders (silent)
+
+### Feed Channel Messages
+
+**When Messages ARE Sent:**
+
+1. **Multi-Bid Win** (LOG_CHANNEL_ID):
+   ```
+   🏆 **Multi-Bid Win**: [Clan Name] won [Player Name] for X points (Y bids total)
+   ```
+
+2. **Single Bid Win** (LOG_CHANNEL_ID):
+   ```
+   🎯 **Single Bid Win**: [Clan Name] won [Player Name] (no competition, no points deducted)
+   ```
+
+3. **Successful Recruitment** (RECRUITMENT_LOG_CHANNEL):
+   - Full embed with green accent
+   - **For Single Bid**: Shows "Single Bid (No Competition): X points bid" + "Points Deducted: 0 (uncontested recruitment)"
+   - **For Multi-Bid**: Shows "Winning Bid: X points" + "Points Deducted: X points"
+   - Remaining points after recruitment
+   - Player details (Discord ID, name, tag, TH level)
+   - 12-day monitoring period notice
+
+4. **Failed Recruitment - Refund** (RECRUITMENT_LOG_CHANNEL):
+   - Full embed with red accent
+   - Winner clan mentioned with role ping
+   - Shows where recruit actually went
+   - "✅ Points Refunded: X points returned to [Clan]"
+
+5. **Manual Ticket Close** (RECRUITMENT_LOG_CHANNEL):
+   - Refund messages for ALL bidding clans
+   - One message per clan
+
+**When Messages are NOT Sent:**
+- ❌ Losing clans when winner succeeds (silent placeholder release)
+- ❌ Placeholder point releases (not a refund, just releasing a hold)
+
+### Common Issues & Solutions
+
+#### Issue: Double Point Deduction
+**Symptom**: Winner clan loses 2X points instead of X
+**Cause**: Deducting actual points AND adjusting placeholder separately
+**Solution**: Use single atomic `$inc` operation for both:
+```python
+{"$inc": {"points": -X, "placeholder_points": -X}}
+```
+
+#### Issue: "Refund" Messages for Losing Clans
+**Symptom**: All clans get refund messages even though losers never paid
+**Cause**: Sending feed messages when releasing placeholder points
+**Solution**: Only send messages for actual refunds (failure scenarios), not placeholder releases
+
+#### Issue: Winner Gets Free Recruit
+**Symptom**: Winner pays 0 points in multi-bid auction
+**Cause**: Only releasing placeholder without deducting actual points
+**Solution**: Must include `"points": -X` in the atomic update
+
+#### Issue: Points Not Deducted at All
+**Symptom**: Winner keeps all their points after winning
+**Cause**: Forgot to deduct actual points, only adjusted placeholder
+**Solution**: Always check both `points` and `placeholder_points` are updated correctly
+
+### Testing Checklist
+
+**Test Scenario 1: Multi-Bid, Timer Completes, Recruit Joins Winner**
+- ✅ Winner pays bid amount once (not double)
+- ✅ Winner's placeholder released
+- ✅ Losers' placeholders released (silent)
+- ✅ Success message in LOG_CHANNEL_ID (auction win)
+- ✅ Success message in RECRUITMENT_LOG_CHANNEL (recruitment complete)
+- ❌ NO refund messages for anyone
+
+**Test Scenario 2: Single Bid, Timer Completes, Recruit Joins Winner**
+- ✅ Winner pays 0 points (free recruit)
+- ✅ Winner's placeholder released
+- ✅ Success message in LOG_CHANNEL_ID (single bid win)
+- ✅ Success message in RECRUITMENT_LOG_CHANNEL (recruitment complete)
+
+**Test Scenario 3: Multi-Bid, Timer Completes, Recruit Joins Different Clan**
+- ✅ Winner gets refund (points returned)
+- ✅ Losers' placeholders released (silent)
+- ✅ Failure/refund message in RECRUITMENT_LOG_CHANNEL for winner only
+- ❌ NO messages for losing clans
+
+**Test Scenario 4: Multi-Bid, Ticket Closed Early, Recruit Joins Winner**
+- ✅ Winner pays bid amount (deduction happens on ticket close)
+- ✅ All placeholders released
+- ✅ Success message in RECRUITMENT_LOG_CHANNEL
+- ❌ NO refund messages
+
+**Test Scenario 5: Manual Ticket Close (No Recruitment)**
+- ✅ ALL clans get placeholders released
+- ✅ Refund messages in RECRUITMENT_LOG_CHANNEL for all bidders
+- ✅ All clans get their points back
+
+### Key Principles
+
+1. **Placeholder points = holds, not payments**
+   - Placeholders reserve points during bidding
+   - Only actual `points` field represents real deductions
+
+2. **Atomic operations prevent double deduction**
+   - Always update `points` and `placeholder_points` together in one operation
+   - Never deduct points and adjust placeholder in separate operations
+
+3. **Feed messages only for actual events**
+   - Success messages when someone wins
+   - Refund messages when someone gets actual money back
+   - NO messages for silent placeholder releases
+
+4. **is_finalized flag is critical**
+   - `True` = Auction timer completed, points already handled
+   - `False` = Ticket closed early, need to handle points now
+
+5. **Losers never pay**
+   - Losing bidders only had placeholder holds
+   - Just release the hold silently when auction ends
+   - No refunds needed because they never paid anything
 
 
 ## Code Style Guidelines
