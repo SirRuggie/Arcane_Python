@@ -6,6 +6,7 @@ utilities = lightbulb.Group("utilities", "Utility commands for server management
 
 # Import submodules to ensure they're loaded
 from . import clone_category
+from . import clone_forum
 from . import purge_category
 from . import process_reddit_post
 from . import reboot
