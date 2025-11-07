@@ -19,7 +19,7 @@ from utils.emoji import emojis
 loader = lightbulb.Loader()
 
 # Configuration
-AUTOBOARD_CHANNEL_ID = 1356702174096261271
+AUTOBOARD_CHANNEL_ID = 1435996160950009917
 UPDATE_INTERVAL = 30
 
 # Global variables

@@ -83,7 +83,7 @@ COMMAND_LIST = {
         ("/clan round-table", "Manage clan round table (right-hand leader) roles and permissions for clan leadership"),
     ],
     "recruit": [
-        ("📖 Recruitment Guide", "Complete recruitment documentation located at the top of <#1356702174096261271> - includes command tutorials, staff hierarchy, blind bidding guide, and essential recruitment details"),
+        ("📖 Recruitment Guide", "Complete recruitment documentation located at the top of <#1435996160950009917> - includes command tutorials, staff hierarchy, blind bidding guide, and essential recruitment details"),
         ("/clan list", "Send clan assignment to a new recruit with welcome message and clan details - select a recruit and assign them to a clan"),
         ("/recruit questions", "Send comprehensive recruitment questionnaire to new recruits - includes FWA base questions, attack strategies, age brackets, and expectations (15-20 minute review time)"),
         ("/recruit bidding", "Start a competitive 15-minute bidding auction for available recruits - clan leaders bid points to win candidates"),
@@ -272,7 +272,7 @@ When someone asks "where" or "how" to find something:
 4. Include timing information for recruitment processes
 
 Examples of good answers for RECRUITMENT:
-- "Need help with recruitment? Check the complete guide at the top of <#1356702174096261271> - it has command tutorials, staff hierarchy, blind bidding guide, and everything you need!"
+- "Need help with recruitment? Check the complete guide at the top of <#1435996160950009917> - it has command tutorials, staff hierarchy, blind bidding guide, and everything you need!"
 - "Want to send recruit questions? Use `/recruit questions` → pick the Discord user → they get a comprehensive questionnaire about FWA bases, attack strategies, age, and expectations → leaders have 15-20 minutes to review!"
 - "Start bidding for recruits? Use `/recruit bidding` → select the Discord user → clans bid points in a 15-minute auction → highest bidder wins!"
 - "Send welcome messages? Use `/recruit welcome` → pick your clan → select the Discord user → they get your clan's custom welcome message (only clan leaders can do this!)"
@@ -328,7 +328,7 @@ Never use big technical words. Instead of "parameters" say "the blanks you fill 
 
 If they ask about something not in the commands, say: "Hmm, I don't know about that command. 🤔 Here's what I CAN help you with: [list 2-3 related commands they might want]. Want to try one of these instead?"
 
-SPECIAL FOCUS: When users ask about recruitment, always mention the full workflow and timing since it's the most complex system in the bot! For detailed recruitment help, always direct them to the comprehensive guide at the top of <#1356702174096261271> which has command tutorials, staff hierarchy, blind bidding guide, and essential recruitment details.
+SPECIAL FOCUS: When users ask about recruitment, always mention the full workflow and timing since it's the most complex system in the bot! For detailed recruitment help, always direct them to the comprehensive guide at the top of <#1435996160950009917> which has command tutorials, staff hierarchy, blind bidding guide, and essential recruitment details.
 
 SPECIAL FOCUS: When users ask about adding new clans, setting up clans, creating clans, or expanding the family, always mention the proper workflow order and direct them to the 'Adding a New Clan' help section for complete step-by-step instructions and video tutorials!
 
