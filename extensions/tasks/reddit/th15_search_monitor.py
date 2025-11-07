@@ -32,7 +32,7 @@ loader = lightbulb.Loader()
 
 # Configuration
 REDDIT_CHECK_INTERVAL = 60
-DISCORD_CHANNEL_ID = 1345220073517875221  # TH15 recruitment notifications channel
+DISCORD_CHANNEL_ID = 1436170049227460679  # TH15 recruitment notifications channel
 PING_ROLE_ID = 1313898769988849766  # Role to ping for TH15 searches
 MONITORED_SUBREDDIT = "ClashOfClansRecruit"
 
