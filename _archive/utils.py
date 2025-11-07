@@ -26,8 +26,8 @@ from utils.mongo import MongoClient
 from utils.classes import Clan
 
 # Channel IDs
-APPROVAL_CHANNEL = 1348691451197784074
-LOG_CHANNEL = 1345589195695194113
+APPROVAL_CHANNEL = 1436169940120899704
+LOG_CHANNEL = 1436169870273413169
 
 # Regex for Discord message links
 DISCORD_LINK_REGEX = re.compile(r"https://discord\.com/channels/(\d+)/(\d+)/(\d+)")

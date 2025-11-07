@@ -7,7 +7,7 @@ from utils.emoji import emojis
 
 # Role and Channel IDs
 RECRUITMENT_STAFF_ROLE = 999140213953671188
-LOG_CHANNEL_ID = 1345589195695194113
+LOG_CHANNEL_ID = 1436169870273413169
 
 # Timing Constants (in seconds)
 REMINDER_DELETE_TIMEOUT = 15  # Seconds before auto-deleting reminder messages

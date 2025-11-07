@@ -31,7 +31,7 @@ coc_client = None
 bot_instance = None
 
 # Log channel ID for recruitment outcomes
-RECRUITMENT_LOG_CHANNEL = 1345589195695194113
+RECRUITMENT_LOG_CHANNEL = 1436169870273413169
 
 # Define the patterns we're looking for (same as open monitor)
 PATTERNS = {

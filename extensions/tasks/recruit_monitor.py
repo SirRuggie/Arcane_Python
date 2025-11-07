@@ -25,7 +25,7 @@ loader = lightbulb.Loader()
 
 # Configuration
 CHECK_INTERVAL = 3600  # Check every hour (3600 seconds)
-RECRUITMENT_LOG_CHANNEL = 1345589195695194113
+RECRUITMENT_LOG_CHANNEL = 1436169870273413169
 MINIMUM_STAY_HOURS = 24  # No refund if they leave within 24 hours
 
 # Global variables

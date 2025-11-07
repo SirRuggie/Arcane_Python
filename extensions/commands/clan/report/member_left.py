@@ -28,7 +28,7 @@ from extensions.commands.clan.report.helpers import get_clan_by_tag, get_clan_op
 loader = lightbulb.Loader()
 
 # Log channel for refund notifications
-RECRUITMENT_LOG_CHANNEL = 1345589195695194113
+RECRUITMENT_LOG_CHANNEL = 1436169870273413169
 
 # Session storage for multi-step flow
 member_left_sessions = {}

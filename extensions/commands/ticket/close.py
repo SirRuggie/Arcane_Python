@@ -20,7 +20,7 @@ from hikari.impl import (
 
 # Recruitment staff role ID (same as create.py)
 RECRUITMENT_STAFF_ROLE = 999140213953671188
-RECRUITMENT_LOG_CHANNEL = 1345589195695194113
+RECRUITMENT_LOG_CHANNEL = 1436169870273413169
 
 
 @ticket.register()

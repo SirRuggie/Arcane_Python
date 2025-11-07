@@ -34,7 +34,7 @@ from .helpers import get_clan_by_tag, get_clan_options, get_categorized_clan_com
 
 # Channel IDs
 RECRUITMENT_CHANNEL = 1378084731874185357
-LOG_CHANNEL = 1345589195695194113
+LOG_CHANNEL = 1436169870273413169
 
 
 # ╔══════════════════════════════════════════════════════════════╗

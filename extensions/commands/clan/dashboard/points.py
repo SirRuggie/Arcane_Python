@@ -31,7 +31,7 @@ from hikari.impl import (
 )
 
 # Log channel for point changes
-POINTS_LOG_CHANNEL = 1345589195695194113
+POINTS_LOG_CHANNEL = 1436169870273413169
 
 
 async def log_points_change(
