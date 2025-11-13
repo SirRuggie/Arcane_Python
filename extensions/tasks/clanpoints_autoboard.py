@@ -32,6 +32,8 @@ async def create_autoboard_embed(clans: list[Clan]) -> list[Container]:
     """Create the autoboard embed using Components V2"""
     # Sort clans by points (highest first) for display order
     sorted_clans = sorted(clans, key=lambda c: c.points, reverse=True)
+    # Filter out clans with 0 points
+    sorted_clans = [c for c in sorted_clans if c.points > 0]
 
     # Build components list
     component_list = [
@@ -74,13 +76,19 @@ async def create_autoboard_embed(clans: list[Clan]) -> list[Container]:
 
         current_block.append(clan_info)
 
-        # Create a new text component every 8 clans to stay under limit (can fit more now)
-        if len(current_block) >= 25 or i == len(sorted_clans) - 1:
+        # Create a new text component every 20 clans to stay under Discord's 4000 character limit
+        if len(current_block) >= 20 or i == len(sorted_clans) - 1:
             component_list.append(Text(content="\n".join(current_block)))
             current_block = []
 
     # Get current timestamp for Discord formatting
     current_timestamp = int(datetime.now().timestamp())
+
+    # Add informational note about filtered clans
+    component_list.extend([
+        Separator(divider=True),
+        Text(content="-# ℹ️ Clans with 0 points are not displayed"),
+    ])
 
     # Add footer
     component_list.extend([
