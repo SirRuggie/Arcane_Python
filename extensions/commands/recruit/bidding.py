@@ -86,7 +86,7 @@ async def safe_adjust_placeholder_points(mongo: MongoClient, clan_tag: str, amou
 
 # Constants
 BIDDING_DURATION = 15  # minutes
-LOG_CHANNEL_ID = 1381395856317747302  # Channel for bid logs
+LOG_CHANNEL_ID = 1435996228168188034  # Channel for bid logs
 
 # Store active bidding sessions with their end times
 active_bidding_sessions: Dict[str, datetime] = {}
