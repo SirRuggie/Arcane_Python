@@ -21,7 +21,7 @@ from hikari.impl import (
     MessageActionRowBuilder as ActionRow,
 )
 
-from utils.constants import BLUE_ACCENT, GREEN_ACCENT, GOLD_ACCENT, RED_ACCENT, DARK_GRAY_ACCENT, STAFF_CASE_TYPES, get_all_teams, get_positions_for_team
+from utils.constants import BLUE_ACCENT, GREEN_ACCENT, GOLD_ACCENT, DARK_MAGENTA_ACCENT, DARK_GRAY_ACCENT, STAFF_CASE_TYPES, get_all_teams, get_positions_for_team
 from .utils import format_discord_timestamp, get_status_emoji, get_forum_thread_url
 
 
@@ -103,7 +103,7 @@ def build_forum_embed(user: hikari.User, log_data: dict) -> list:
         "Active": GREEN_ACCENT,
         "On Leave": GOLD_ACCENT,
         "Inactive": hikari.Color.from_hex_code("#808080"),
-        "Terminated": RED_ACCENT,
+        "Terminated": DARK_MAGENTA_ACCENT,
         "Staff Banned": hikari.Color.from_hex_code("#8B0000")
     }.get(status, BLUE_ACCENT)
 
@@ -580,7 +580,7 @@ def build_staff_record_view(log: dict, user: hikari.User, guild_id: int, from_te
         "Active": GREEN_ACCENT,
         "On Leave": GOLD_ACCENT,
         "Inactive": hikari.Color.from_hex_code("#808080"),
-        "Terminated": RED_ACCENT,
+        "Terminated": DARK_MAGENTA_ACCENT,
         "Staff Banned": hikari.Color.from_hex_code("#8B0000")
     }.get(status, BLUE_ACCENT)
 
@@ -1214,7 +1214,7 @@ def build_remove_position_selection(guild_id: int, user_id: str, log: dict) -> l
         # Show message that removal isn't possible
         components = [
             Container(
-                accent_color=RED_ACCENT,
+                accent_color=DARK_MAGENTA_ACCENT,
                 components=[
                     Text(content=f"## ➖ Remove Position for {username}"),
                     Separator(divider=True),
@@ -1243,7 +1243,7 @@ def build_remove_position_selection(guild_id: int, user_id: str, log: dict) -> l
         # Show position selection
         components = [
             Container(
-                accent_color=RED_ACCENT,
+                accent_color=DARK_MAGENTA_ACCENT,
                 components=[
                     Text(content=f"## ➖ Remove Position for {username}"),
                     Separator(divider=True),
@@ -1369,7 +1369,7 @@ def build_remove_case_selection(guild_id: int, user_id: str, log: dict) -> list:
         # No cases to remove
         components = [
             Container(
-                accent_color=RED_ACCENT,
+                accent_color=DARK_MAGENTA_ACCENT,
                 components=[
                     Text(content=f"## 🗑️ Remove Case for {username}"),
                     Separator(divider=True),
@@ -1411,7 +1411,7 @@ def build_remove_case_selection(guild_id: int, user_id: str, log: dict) -> list:
 
         components = [
             Container(
-                accent_color=RED_ACCENT,
+                accent_color=DARK_MAGENTA_ACCENT,
                 components=[
                     Text(content=f"## 🗑️ Remove Case for {username}"),
                     Separator(divider=True),
@@ -1477,7 +1477,7 @@ def build_case_type_selection(guild_id: int, user_id: str, username: str) -> lis
 
     components = [
         Container(
-            accent_color=RED_ACCENT,
+            accent_color=DARK_MAGENTA_ACCENT,
             components=[
                 Text(content=f"## ⚠️ Add Case for {username}"),
                 Separator(divider=True),

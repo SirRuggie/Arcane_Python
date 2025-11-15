@@ -28,7 +28,7 @@ from hikari.impl import (
 )
 
 from extensions.components import register_action
-from utils.constants import BLUE_ACCENT, GREEN_ACCENT, RED_ACCENT, GOLD_ACCENT
+from utils.constants import BLUE_ACCENT, GREEN_ACCENT, DARK_MAGENTA_ACCENT, GOLD_ACCENT
 from utils.mongo import MongoClient
 from utils.emoji import emojis
 

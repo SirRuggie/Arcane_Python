@@ -17,7 +17,7 @@ from hikari.impl import (
 )
 
 from extensions.components import register_action
-from utils.constants import BLUE_ACCENT, GOLD_ACCENT, GREEN_ACCENT, RED_ACCENT
+from utils.constants import BLUE_ACCENT, GOLD_ACCENT, GREEN_ACCENT, DARK_MAGENTA_ACCENT
 from utils.mongo import MongoClient
 
 loader = lightbulb.Loader()
@@ -151,7 +151,7 @@ class ColorCommand(
         # Build components following your project patterns
         components = [
             Container(
-                accent_color=RED_ACCENT,
+                accent_color=DARK_MAGENTA_ACCENT,
                 components=[
                     Text(content=(
                         "### 🎨 Choose Your Colour\n"
@@ -225,7 +225,7 @@ async def on_color_selected(
         )
         messages.append(
             f"<:{selected_color['name']}:{selected_color['emoji_id']}> **{selected_color['name']}** removed!")
-        accent_color = RED_ACCENT
+        accent_color = DARK_MAGENTA_ACCENT
     else:
         # Remove any existing color roles first
         for color in current_color_roles:
@@ -289,7 +289,7 @@ async def on_color_selected(
 
     new_components = [
         Container(
-            accent_color=RED_ACCENT,
+            accent_color=DARK_MAGENTA_ACCENT,
             components=[
                 Text(content=(
                     "### 🎨 Choose Your Color\n"

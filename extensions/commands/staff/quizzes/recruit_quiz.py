@@ -19,7 +19,7 @@ from hikari.impl import (
 )
 
 from extensions.commands.staff import staff
-from utils.constants import GOLD_ACCENT, GREEN_ACCENT, RED_ACCENT
+from utils.constants import GOLD_ACCENT, GREEN_ACCENT, DARK_MAGENTA_ACCENT
 from utils.mongo import MongoClient
 from extensions.components import register_action
 
@@ -971,7 +971,7 @@ async def handle_quiz_answer(
     else:
         feedback_components = [
             Container(
-                accent_color=RED_ACCENT,
+                accent_color=DARK_MAGENTA_ACCENT,
                 components=[
                     Text(content="## ❌ Incorrect"),
                     Separator(divider=True),
@@ -1077,7 +1077,7 @@ async def build_results_screen(quiz_state: dict, user: hikari.User, bot: hikari.
         status_text = f"## ✅ {mode_text}PASSED!"
         message = f"Congratulations {user.mention}! You passed the {mode_text.lower()}recruitment staff quiz with a score of **{score}/{total} ({percentage}%)**!\n\nYou've demonstrated a solid understanding of our recruitment guidelines."
     else:
-        accent_color = RED_ACCENT
+        accent_color = DARK_MAGENTA_ACCENT
         status_text = f"## ❌ {mode_text}FAILED"
         message = f"Unfortunately {user.mention}, you did not pass the {mode_text.lower()}quiz. You scored **{score}/{total} ({percentage}%)**.\n\nYou need at least **{passing_text}** to pass. Please review the guidelines and try again."
 

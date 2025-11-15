@@ -29,7 +29,7 @@ from extensions.components import register_action
 from io import BytesIO
 from PIL import Image
 
-from utils.constants import RED_ACCENT, GREEN_ACCENT
+from utils.constants import DARK_MAGENTA_ACCENT, GREEN_ACCENT
 from utils.classes import Clan
 from utils.emoji import emojis
 from utils.mongo import MongoClient
@@ -117,7 +117,7 @@ async def create_role_setup_dialog(clan, bot: hikari.GatewayBot, guild_id: hikar
         Media(items=[MediaItem(media="assets/Red_Footer.png")])
     ])
 
-    return [Container(accent_color=RED_ACCENT, components=components)]
+    return [Container(accent_color=DARK_MAGENTA_ACCENT, components=components)]
 
 
 @register_action("role_autocreate", no_return=True)
@@ -170,7 +170,7 @@ async def handle_role_autocreate(
                 await ctx.interaction.edit_initial_response(
                     components=[
                         Container(
-                            accent_color=RED_ACCENT,
+                            accent_color=DARK_MAGENTA_ACCENT,
                             components=[
                                 Text(content="## ❌ Permission Error"),
                                 Text(content="I don't have permission to create roles. Please check bot permissions."),
@@ -203,7 +203,7 @@ async def handle_role_autocreate(
                 await ctx.interaction.edit_initial_response(
                     components=[
                         Container(
-                            accent_color=RED_ACCENT,
+                            accent_color=DARK_MAGENTA_ACCENT,
                             components=[
                                 Text(content="## ❌ Permission Error"),
                                 Text(content="I don't have permission to create roles. Please check bot permissions."),
@@ -271,7 +271,7 @@ async def handle_role_autocreate(
         await ctx.interaction.edit_initial_response(
             components=[
                 Container(
-                    accent_color=RED_ACCENT,
+                    accent_color=DARK_MAGENTA_ACCENT,
                     components=[
                         Text(content="## ❌ Error Creating Clan"),
                         Text(content=f"An error occurred: {str(e)}"),
@@ -331,7 +331,7 @@ async def handle_role_skip(
         await ctx.interaction.edit_initial_response(
             components=[
                 Container(
-                    accent_color=RED_ACCENT,
+                    accent_color=DARK_MAGENTA_ACCENT,
                     components=[
                         Text(content="## ❌ Error Creating Clan"),
                         Text(content=f"An error occurred: {str(e)}"),
@@ -413,14 +413,14 @@ async def handle_role_select_existing(
         ]
 
         await ctx.interaction.edit_initial_response(
-            components=[Container(accent_color=RED_ACCENT, components=components)]
+            components=[Container(accent_color=DARK_MAGENTA_ACCENT, components=components)]
         )
 
     except Exception as e:
         await ctx.interaction.edit_initial_response(
             components=[
                 Container(
-                    accent_color=RED_ACCENT,
+                    accent_color=DARK_MAGENTA_ACCENT,
                     components=[
                         Text(content="## ❌ Error Loading Roles"),
                         Text(content=f"An error occurred: {str(e)}"),
@@ -551,14 +551,14 @@ async def show_role_selection_feedback(ctx: lightbulb.components.MenuContext, cl
         ]
 
         await ctx.interaction.edit_initial_response(
-            components=[Container(accent_color=RED_ACCENT, components=components)]
+            components=[Container(accent_color=DARK_MAGENTA_ACCENT, components=components)]
         )
 
     except Exception as e:
         await ctx.interaction.edit_initial_response(
             components=[
                 Container(
-                    accent_color=RED_ACCENT,
+                    accent_color=DARK_MAGENTA_ACCENT,
                     components=[
                         Text(content="## ❌ Error Updating UI"),
                         Text(content=f"An error occurred: {str(e)}"),
@@ -660,7 +660,7 @@ async def handle_confirm_role_selection(
         await ctx.interaction.edit_initial_response(
             components=[
                 Container(
-                    accent_color=RED_ACCENT,
+                    accent_color=DARK_MAGENTA_ACCENT,
                     components=[
                         Text(content="## ❌ Error Creating Clan"),
                         Text(content=f"An error occurred: {str(e)}"),
@@ -675,7 +675,7 @@ async def clan_management_menu():
     """Return the clan management menu components"""
     return [
         Container(
-            accent_color=RED_ACCENT,
+            accent_color=DARK_MAGENTA_ACCENT,
             components=[
                 Text(content=(
                     "### Update Clan Information\n\n"
@@ -760,7 +760,7 @@ async def update_clan_information(
         # User doesn't have permission - show access denied message
         components = [
             Container(
-                accent_color=RED_ACCENT,
+                accent_color=DARK_MAGENTA_ACCENT,
                 components=[
                     Text(content="## ❌ Access Denied"),
                     Separator(divider=True),
@@ -796,7 +796,7 @@ async def add_clan_page(
 ):
     components = [
         Container(
-            accent_color=RED_ACCENT,
+            accent_color=DARK_MAGENTA_ACCENT,
             components=[
                 Text(content=(
                     "### Add a New Clan\n\n"
@@ -895,7 +895,7 @@ async def remove_clan_select(
     if CLAN_MANAGEMENT_ROLE_ID not in user_role_ids:
         components = [
             Container(
-                accent_color=RED_ACCENT,
+                accent_color=DARK_MAGENTA_ACCENT,
                 components=[
                     Text(content="## ❌ Access Denied"),
                     Separator(divider=True),
@@ -995,7 +995,7 @@ async def remove_clan_select(
 
     components = [
         Container(
-            accent_color=RED_ACCENT,
+            accent_color=DARK_MAGENTA_ACCENT,
             components=component_list,
         )
     ]
@@ -1015,7 +1015,7 @@ async def clan_remove_show_more(
     if not stored_data:
         return [
             Container(
-                accent_color=RED_ACCENT,
+                accent_color=DARK_MAGENTA_ACCENT,
                 components=[Text(content="⚠️ Session expired. Please run the command again.")]
             )
         ]
@@ -1114,7 +1114,7 @@ async def clan_remove_show_more(
     component_list.append(ActionRow(components=navigation_buttons))
     component_list.append(Media(items=[MediaItem(media="assets/Red_Footer.png")]))
 
-    return [Container(accent_color=RED_ACCENT, components=component_list)]
+    return [Container(accent_color=DARK_MAGENTA_ACCENT, components=component_list)]
 
 
 @register_action("clan_remove_browse_next", ephemeral=True)
@@ -1185,7 +1185,7 @@ async def clan_remove_menu(
     db_clan = Clan(data=raw)
 
     components = [Container(
-        accent_color=RED_ACCENT,
+        accent_color=DARK_MAGENTA_ACCENT,
         components=[
             Text(content=f"## ✏️ **Remove {db_clan.name} from Database** (`{db_clan.tag}`)"),
             Separator(divider=True, spacing=hikari.SpacingType.LARGE),
@@ -1274,7 +1274,7 @@ async def on_remove_clan_field(
 
         deletion_components = [
             Container(
-                accent_color=RED_ACCENT,
+                accent_color=DARK_MAGENTA_ACCENT,
                 components=container_components
             )
         ]
@@ -1373,7 +1373,7 @@ async def choose_clan_select(
 
     components = [
         Container(
-            accent_color=RED_ACCENT,
+            accent_color=DARK_MAGENTA_ACCENT,
             components=component_list,
         )
     ]
@@ -1393,7 +1393,7 @@ async def clan_edit_show_more(
     if not stored_data:
         return [
             Container(
-                accent_color=RED_ACCENT,
+                accent_color=DARK_MAGENTA_ACCENT,
                 components=[Text(content="⚠️ Session expired. Please run the command again.")]
             )
         ]
@@ -1492,7 +1492,7 @@ async def clan_edit_show_more(
     component_list.append(ActionRow(components=navigation_buttons))
     component_list.append(Media(items=[MediaItem(media="assets/Red_Footer.png")]))
 
-    return [Container(accent_color=RED_ACCENT, components=component_list)]
+    return [Container(accent_color=DARK_MAGENTA_ACCENT, components=component_list)]
 
 
 @register_action("clan_edit_browse_next", ephemeral=True)
@@ -1609,7 +1609,7 @@ async def clan_edit_menu(
         ])
 
     components = [Container(
-        accent_color=RED_ACCENT,
+        accent_color=DARK_MAGENTA_ACCENT,
         components=[
             Text(content=f"## ✏️ **Editing {db_clan.name}** (`{db_clan.tag}`)"),
             Separator(divider=True, spacing=hikari.SpacingType.LARGE),
@@ -1851,7 +1851,7 @@ async def update_logo_button(
         # This shouldn't happen, but it's good to handle edge cases
         components = [
             Container(
-                accent_color=RED_ACCENT,
+                accent_color=DARK_MAGENTA_ACCENT,
                 components=[
                     Text(content="❌ Clan not found in database."),
                     Media(items=[MediaItem(media="assets/Red_Footer.png")]),
@@ -1865,7 +1865,7 @@ async def update_logo_button(
     # Create a helpful instruction panel that explains both options
     components = [
         Container(
-            accent_color=RED_ACCENT,
+            accent_color=DARK_MAGENTA_ACCENT,
             components=[
                 Text(content=f"## 📸 Update Logo for {clan_name}"),
                 Separator(divider=True),
@@ -1938,7 +1938,7 @@ async def logo_upload_guide(
     # Create the instruction guide with copyable command
     components = [
         Container(
-            accent_color=RED_ACCENT,
+            accent_color=DARK_MAGENTA_ACCENT,
             components=[
                 Text(content="## 📤 Upload Files Instructions"),
                 Separator(divider=True),
@@ -2076,7 +2076,7 @@ async def update_logo_modal(
         # Create error components that maintain the interface style
         error_components = [
             Container(
-                accent_color=RED_ACCENT,
+                accent_color=DARK_MAGENTA_ACCENT,
                 components=[
                     Text(content="## ❌ Update Failed"),
                     Separator(divider=True),
@@ -2143,7 +2143,7 @@ async def edit_roles(
 
     components = [
         Container(
-            accent_color=RED_ACCENT,
+            accent_color=DARK_MAGENTA_ACCENT,
             components=[
                 Text(content=f"## 👤 **Edit Roles - {db_clan.name}**"),
                 Separator(divider=True),
@@ -2219,7 +2219,7 @@ async def edit_channels(
 
     components = [
         Container(
-            accent_color=RED_ACCENT,
+            accent_color=DARK_MAGENTA_ACCENT,
             components=[
                 Text(content=f"## 💬 **Edit Channels - {db_clan.name}**"),
                 Separator(divider=True),
@@ -2308,7 +2308,7 @@ async def update_emoji_button(
     if not clan_data:
         components = [
             Container(
-                accent_color=RED_ACCENT,
+                accent_color=DARK_MAGENTA_ACCENT,
                 components=[
                     Text(content="❌ Clan not found in database."),
                     Media(items=[MediaItem(media="assets/Red_Footer.png")]),
@@ -2323,7 +2323,7 @@ async def update_emoji_button(
     # Create instruction panel for emoji upload
     components = [
         Container(
-            accent_color=RED_ACCENT,
+            accent_color=DARK_MAGENTA_ACCENT,
             components=[
                 Text(content=f"## 😊 Update Emoji for {clan_name}"),
                 Separator(divider=True),
@@ -2417,7 +2417,7 @@ async def emoji_from_cloudinary(
     if not raw:
         return [
             Container(
-                accent_color=RED_ACCENT,
+                accent_color=DARK_MAGENTA_ACCENT,
                 components=[
                     Text(content="❌ Clan not found!"),
                     Media(items=[MediaItem(media="assets/Red_Footer.png")]),
@@ -2431,7 +2431,7 @@ async def emoji_from_cloudinary(
     if not db_clan.logo:
         return [
             Container(
-                accent_color=RED_ACCENT,
+                accent_color=DARK_MAGENTA_ACCENT,
                 components=[
                     Text(content=(
                         "❌ **No Logo Found**\n\n"
@@ -2476,7 +2476,7 @@ async def process_emoji_upload(
     # Create loading message
     loading_components = [
         Container(
-            accent_color=RED_ACCENT,
+            accent_color=DARK_MAGENTA_ACCENT,
             components=[
                 Text(content="## ⏳ Processing Emoji..."),
                 Text(content="Downloading and resizing image..."),
@@ -2610,7 +2610,7 @@ async def process_emoji_upload(
     except Exception as e:
         error_components = [
             Container(
-                accent_color=RED_ACCENT,
+                accent_color=DARK_MAGENTA_ACCENT,
                 components=[
                     Text(content="## ❌ Emoji Upload Failed"),
                     Separator(divider=True),
@@ -2796,7 +2796,7 @@ async def update_recruit_welcome_modal_submission(
         # Create error components
         error_components = [
             Container(
-                accent_color=RED_ACCENT,
+                accent_color=DARK_MAGENTA_ACCENT,
                 components=[
                     Text(content="## ❌ Update Failed"),
                     Separator(divider=True),
@@ -2931,7 +2931,7 @@ async def update_clan_profile_modal_submission(
         # Create error components
         profile_error_components = [
             Container(
-                accent_color=RED_ACCENT,
+                accent_color=DARK_MAGENTA_ACCENT,
                 components=[
                     Text(content="## ❌ Update Failed"),
                     Separator(divider=True),

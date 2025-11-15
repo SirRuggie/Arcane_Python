@@ -9,7 +9,7 @@ import datetime
 from typing import Callable
 from utils.mongo import MongoClient
 
-from utils.constants import RED_ACCENT
+from utils.constants import DARK_MAGENTA_ACCENT
 
 from hikari.events.interaction_events import ComponentInteractionCreateEvent
 loader = lightbulb.Loader()
@@ -100,7 +100,7 @@ async def component_handler(
 
     kw = await mongo.button_store.find_one({"_id": action_id}, {"_id" : 0})
     kw = kw or {} 
-    kw = kw | {"color" : RED_ACCENT, "action_id" : action_id, "ctx": ctx}
+    kw = kw | {"color" : DARK_MAGENTA_ACCENT, "action_id" : action_id, "ctx": ctx}
     if not kw:
         return
     components = await function(**kw)

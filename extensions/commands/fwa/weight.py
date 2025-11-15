@@ -2,7 +2,7 @@ import lightbulb
 import hikari
 
 from extensions.commands.fwa import fwa
-from utils.constants import BLUE_ACCENT, GOLD_ACCENT, GREEN_ACCENT, RED_ACCENT
+from utils.constants import BLUE_ACCENT, GOLD_ACCENT, GREEN_ACCENT, DARK_MAGENTA_ACCENT
 from utils.emoji import emojis
 
 from hikari.impl import (
@@ -35,11 +35,11 @@ def determine_town_hall(total_weight: int) -> tuple[int | None, str, int]:
     """
     # Check if below TH9 minimum
     if total_weight < 56000:
-        return None, "below", RED_ACCENT
+        return None, "below", DARK_MAGENTA_ACCENT
 
     # Check if above TH17 maximum
     if total_weight > 170000:
-        return None, "above", RED_ACCENT
+        return None, "above", DARK_MAGENTA_ACCENT
 
     # Find exact match
     for th_level, range_data in WAR_WEIGHT_RANGES.items():
@@ -51,7 +51,7 @@ def determine_town_hall(total_weight: int) -> tuple[int | None, str, int]:
         if total_weight < WAR_WEIGHT_RANGES[th_level]["min"]:
             return th_level - 1, "between", GOLD_ACCENT
 
-    return None, "unknown", RED_ACCENT
+    return None, "unknown", DARK_MAGENTA_ACCENT
 
 
 def get_th_emoji(th_level: int) -> str:

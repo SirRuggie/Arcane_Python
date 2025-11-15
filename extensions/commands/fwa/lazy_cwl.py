@@ -18,7 +18,7 @@ from apscheduler.triggers.interval import IntervalTrigger
 from extensions.commands.fwa import loader, fwa
 from extensions.components import register_action
 from utils.mongo import MongoClient
-from utils.constants import RED_ACCENT, GOLD_ACCENT, BLUE_ACCENT, GREEN_ACCENT
+from utils.constants import DARK_MAGENTA_ACCENT, GOLD_ACCENT, BLUE_ACCENT, GREEN_ACCENT
 from utils.emoji import emojis
 from utils.classes import Clan
 
@@ -80,7 +80,7 @@ async def create_clan_selector_components(fwa_clans: List[Dict], action_prefix: 
     if not fwa_clans:
         return [
             Container(
-                accent_color=RED_ACCENT,
+                accent_color=DARK_MAGENTA_ACCENT,
                 components=[
                     Text(content="## ❌ No FWA Clans Found"),
                     Text(content="No FWA clans are configured in the database."),
@@ -148,7 +148,7 @@ class LazyCwlSnapshot(
         if not fwa_clans:
             components = [
                 Container(
-                    accent_color=RED_ACCENT,
+                    accent_color=DARK_MAGENTA_ACCENT,
                     components=[
                         Text(content="## ❌ No FWA Clans Found"),
                         Text(content="No FWA clans are configured in the database."),
@@ -235,7 +235,7 @@ class LazyCwlPing(
         if not snapshots:
             components = [
                 Container(
-                    accent_color=RED_ACCENT,
+                    accent_color=DARK_MAGENTA_ACCENT,
                     components=[
                         Text(content="## ❌ No Active Snapshots"),
                         Text(content=f"No active CWL snapshots found."),
@@ -320,7 +320,7 @@ class LazyCwlStatus(
         if not snapshots:
             components = [
                 Container(
-                    accent_color=RED_ACCENT,
+                    accent_color=DARK_MAGENTA_ACCENT,
                     components=[
                         Text(content="## 📊 No Active Snapshots"),
                         Text(content=f"No active FWA LazyCWL snapshots found."),
@@ -391,7 +391,7 @@ class LazyCwlRoster(
         if not snapshots:
             components = [
                 Container(
-                    accent_color=RED_ACCENT,
+                    accent_color=DARK_MAGENTA_ACCENT,
                     components=[
                         Text(content="## ❌ No Active Snapshots"),
                         Text(content=f"No active LazyCWL snapshots found."),
@@ -470,7 +470,7 @@ class LazyCwlReset(
         if not snapshots:
             components = [
                 Container(
-                    accent_color=RED_ACCENT,
+                    accent_color=DARK_MAGENTA_ACCENT,
                     components=[
                         Text(content="## ℹ️ No Active Snapshots"),
                         Text(content=f"No active snapshots found to reset."),
@@ -513,7 +513,7 @@ class LazyCwlReset(
 
         components = [
             Container(
-                accent_color=RED_ACCENT,
+                accent_color=DARK_MAGENTA_ACCENT,
                 components=[
                     Text(content="## 🗑️ Select Snapshot(s) to Reset"),
                     Text(content="Choose which snapshot(s) to deactivate:"),
@@ -562,7 +562,7 @@ class LazyCwlAutopingsStart(
         if not snapshots:
             components = [
                 Container(
-                    accent_color=RED_ACCENT,
+                    accent_color=DARK_MAGENTA_ACCENT,
                     components=[
                         Text(content="## ❌ No Available Snapshots"),
                         Text(content="No active snapshots found without auto-ping enabled."),
@@ -641,7 +641,7 @@ class LazyCwlAutopingsStop(
         if not snapshots:
             components = [
                 Container(
-                    accent_color=RED_ACCENT,
+                    accent_color=DARK_MAGENTA_ACCENT,
                     components=[
                         Text(content="## ❌ No Active Auto-Pings"),
                         Text(content="No snapshots currently have auto-ping enabled."),
@@ -722,7 +722,7 @@ class LazyCwlAutopingsStatus(
         if not snapshots:
             components = [
                 Container(
-                    accent_color=RED_ACCENT,
+                    accent_color=DARK_MAGENTA_ACCENT,
                     components=[
                         Text(content="## 📊 No Active Auto-Pings"),
                         Text(content="No snapshots currently have auto-ping enabled."),
@@ -818,7 +818,7 @@ class LazyCwlRemovePlayer(
         if not snapshots:
             components = [
                 Container(
-                    accent_color=RED_ACCENT,
+                    accent_color=DARK_MAGENTA_ACCENT,
                     components=[
                         Text(content="## ❌ No Active Snapshots"),
                         Text(content="No active snapshots found. Create a snapshot first with `/lazycwl-snapshot`."),
@@ -1080,7 +1080,7 @@ async def handle_snapshot_select(
             if not fwa_clans:
                 components = [
                     Container(
-                        accent_color=RED_ACCENT,
+                        accent_color=DARK_MAGENTA_ACCENT,
                         components=[
                             Text(content="## ❌ No FWA Clans Found"),
                             Text(content="No FWA clans found in database."),
@@ -1145,7 +1145,7 @@ async def handle_snapshot_select(
                 if result.get('already_exists'):
                     components = [
                         Container(
-                            accent_color=RED_ACCENT,
+                            accent_color=DARK_MAGENTA_ACCENT,
                             components=[
                                 Text(content="## ⚠️ Snapshot Already Exists"),
                                 Text(content=f"An active snapshot for **{result['clan_name']}** `{result['clan_tag']}` already exists."),
@@ -1157,7 +1157,7 @@ async def handle_snapshot_select(
                 else:
                     components = [
                         Container(
-                            accent_color=RED_ACCENT,
+                            accent_color=DARK_MAGENTA_ACCENT,
                             components=[
                                 Text(content="## ❌ Snapshot Creation Failed"),
                                 Text(content=f"Failed to create snapshot for **{result['clan_name']}** `{result['clan_tag']}`:"),
@@ -1190,7 +1190,7 @@ async def handle_snapshot_select(
     except Exception as e:
         components = [
             Container(
-                accent_color=RED_ACCENT,
+                accent_color=DARK_MAGENTA_ACCENT,
                 components=[
                     Text(content="## ❌ Snapshot Creation Failed"),
                     Text(content=f"Failed to process snapshot request:"),
@@ -1393,7 +1393,7 @@ async def auto_ping_job(snapshot_id: str):
                         ping_count = snapshot.get("auto_ping_count", 0)
                         expiry_components = [
                             Container(
-                                accent_color=RED_ACCENT,
+                                accent_color=DARK_MAGENTA_ACCENT,
                                 components=[
                                     Text(content="## ⏰ Auto-Ping Expired"),
                                     Separator(),
@@ -1541,7 +1541,7 @@ async def handle_ping_select(
             if not snapshots:
                 components = [
                     Container(
-                        accent_color=RED_ACCENT,
+                        accent_color=DARK_MAGENTA_ACCENT,
                         components=[
                             Text(content="## ❌ No Active Snapshots"),
                             Text(content="No active snapshots found to ping."),
@@ -1606,7 +1606,7 @@ async def handle_ping_select(
             if not result['success']:
                 components = [
                     Container(
-                        accent_color=RED_ACCENT,
+                        accent_color=DARK_MAGENTA_ACCENT,
                         components=[
                             Text(content="## ❌ Ping Failed"),
                             Text(content=f"Failed to process **{result['clan_name']}**:"),
@@ -1645,7 +1645,7 @@ async def handle_ping_select(
     except Exception as e:
         components = [
             Container(
-                accent_color=RED_ACCENT,
+                accent_color=DARK_MAGENTA_ACCENT,
                 components=[
                     Text(content="## ❌ Ping Failed"),
                     Text(content=f"Failed to process ping request:"),
@@ -1726,7 +1726,7 @@ async def handle_roster_select(
     except Exception as e:
         components = [
             Container(
-                accent_color=RED_ACCENT,
+                accent_color=DARK_MAGENTA_ACCENT,
                 components=[
                     Text(content="## ❌ Failed to Load Roster"),
                     Text(content=f"Failed to load snapshot roster:"),
@@ -1759,7 +1759,7 @@ async def handle_reset_select(
             if not snapshots:
                 components = [
                     Container(
-                        accent_color=RED_ACCENT,
+                        accent_color=DARK_MAGENTA_ACCENT,
                         components=[
                             Text(content="## ❌ No Active Snapshots"),
                             Text(content="No active snapshots found to reset."),
@@ -1819,7 +1819,7 @@ async def handle_reset_select(
             if not result['success']:
                 components = [
                     Container(
-                        accent_color=RED_ACCENT,
+                        accent_color=DARK_MAGENTA_ACCENT,
                         components=[
                             Text(content="## ❌ Reset Failed"),
                             Text(content=f"Failed to reset snapshot for **{result['clan_name']}** `{result['clan_tag']}`:"),
@@ -1852,7 +1852,7 @@ async def handle_reset_select(
     except Exception as e:
         components = [
             Container(
-                accent_color=RED_ACCENT,
+                accent_color=DARK_MAGENTA_ACCENT,
                 components=[
                     Text(content="## ❌ Reset Failed"),
                     Text(content=f"Failed to process reset request:"),
@@ -1919,7 +1919,7 @@ async def handle_confirm_reset(
     except Exception as e:
         components = [
             Container(
-                accent_color=RED_ACCENT,
+                accent_color=DARK_MAGENTA_ACCENT,
                 components=[
                     Text(content="## ❌ Reset Failed"),
                     Text(content=f"Failed to reset snapshots:"),
@@ -2028,7 +2028,7 @@ async def handle_autopings_select_snapshot(
     except Exception as e:
         components = [
             Container(
-                accent_color=RED_ACCENT,
+                accent_color=DARK_MAGENTA_ACCENT,
                 components=[
                     Text(content="## ❌ Error"),
                     Text(content=f"Failed to process selection: {str(e)}"),
@@ -2124,7 +2124,7 @@ async def handle_autopings_select_interval(
         print(f"[LazyCWL AutoPing] Failed to start auto-ping: {e}")
         components = [
             Container(
-                accent_color=RED_ACCENT,
+                accent_color=DARK_MAGENTA_ACCENT,
                 components=[
                     Text(content="## ❌ Failed to Start Auto-Ping"),
                     Text(content=f"Error: {str(e)}"),
@@ -2197,7 +2197,7 @@ async def handle_autopings_stop_select(
         print(f"[LazyCWL AutoPing] Failed to stop auto-ping: {e}")
         components = [
             Container(
-                accent_color=RED_ACCENT,
+                accent_color=DARK_MAGENTA_ACCENT,
                 components=[
                     Text(content="## ❌ Failed to Stop Auto-Ping"),
                     Text(content=f"Error: {str(e)}"),
@@ -2230,7 +2230,7 @@ async def handle_remove_player_select_snapshot(
         if not players:
             components = [
                 Container(
-                    accent_color=RED_ACCENT,
+                    accent_color=DARK_MAGENTA_ACCENT,
                     components=[
                         Text(content="## ❌ No Players"),
                         Text(content=f"Snapshot for **{snapshot['clan_name']}** has no players."),
@@ -2362,7 +2362,7 @@ async def handle_remove_player_select_snapshot(
         print(f"[LazyCWL Remove] Error selecting snapshot: {e}")
         components = [
             Container(
-                accent_color=RED_ACCENT,
+                accent_color=DARK_MAGENTA_ACCENT,
                 components=[
                     Text(content="## ❌ Error"),
                     Text(content=f"Failed to load snapshot: {str(e)}"),
@@ -2473,7 +2473,7 @@ async def handle_remove_player_select_players(
         print(f"[LazyCWL Remove] Error selecting players: {e}")
         components = [
             Container(
-                accent_color=RED_ACCENT,
+                accent_color=DARK_MAGENTA_ACCENT,
                 components=[
                     Text(content="## ❌ Error"),
                     Text(content=f"Failed to process selection: {str(e)}"),
@@ -2549,7 +2549,7 @@ async def handle_remove_player_confirm(
         print(f"[LazyCWL Remove] Error removing players: {e}")
         components = [
             Container(
-                accent_color=RED_ACCENT,
+                accent_color=DARK_MAGENTA_ACCENT,
                 components=[
                     Text(content="## ❌ Removal Failed"),
                     Text(content=f"Failed to remove players: {str(e)}"),
@@ -2608,7 +2608,7 @@ async def handle_remove_player_page_next(
         print(f"[LazyCWL Remove] Error navigating to next page: {e}")
         components = [
             Container(
-                accent_color=RED_ACCENT,
+                accent_color=DARK_MAGENTA_ACCENT,
                 components=[
                     Text(content="## ❌ Error"),
                     Text(content=f"Failed to navigate: {str(e)}"),
@@ -2661,7 +2661,7 @@ async def handle_remove_player_page_prev(
         print(f"[LazyCWL Remove] Error navigating to previous page: {e}")
         components = [
             Container(
-                accent_color=RED_ACCENT,
+                accent_color=DARK_MAGENTA_ACCENT,
                 components=[
                     Text(content="## ❌ Error"),
                     Text(content=f"Failed to navigate: {str(e)}"),

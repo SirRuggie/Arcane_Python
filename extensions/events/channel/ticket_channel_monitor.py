@@ -8,7 +8,7 @@ import lightbulb
 import coc
 from datetime import datetime, timedelta, timezone
 from utils.mongo import MongoClient
-from utils.constants import RED_ACCENT, GOLD_ACCENT
+from utils.constants import DARK_MAGENTA_ACCENT, GOLD_ACCENT
 from utils.emoji import emojis
 
 # Import Components V2
@@ -639,7 +639,7 @@ async def on_channel_create(event: hikari.GuildChannelCreateEvent) -> None:
             
             components = [
                 Container(
-                    accent_color=RED_ACCENT,
+                    accent_color=DARK_MAGENTA_ACCENT,
                     components=regular_components
                 )
             ]
@@ -652,7 +652,7 @@ async def on_channel_create(event: hikari.GuildChannelCreateEvent) -> None:
 
         components = [
             Container(
-                accent_color=RED_ACCENT,
+                accent_color=DARK_MAGENTA_ACCENT,
                 components=[
                     Text(content=f"{emojis.Alert} **Error Processing Ticket** {emojis.Alert}"),
                     Separator(divider=True),

@@ -7,7 +7,7 @@ from extensions.commands.clan   import loader, clan
 from extensions.components      import register_action
 from utils.mongo                import MongoClient
 from utils.classes              import Clan
-from utils.constants            import RED_ACCENT
+from utils.constants            import DARK_MAGENTA_ACCENT
 from utils.emoji                import emojis
 
 from hikari.impl import (
@@ -163,7 +163,7 @@ class ListCommand(
 
         components = [
             Container(
-                accent_color=RED_ACCENT,
+                accent_color=DARK_MAGENTA_ACCENT,
                 components=component_list,
             )
         ]
@@ -196,7 +196,7 @@ async def on_clan_chosen(
     if not raw:
         return [
             Container(
-                accent_color=RED_ACCENT,
+                accent_color=DARK_MAGENTA_ACCENT,
                 components=[Text(content="⚠️ I couldn’t find that clan in our database.")]
             )
         ]
@@ -227,7 +227,7 @@ async def on_clan_chosen(
     )
     components = [
         Container(
-            accent_color=RED_ACCENT,
+            accent_color=DARK_MAGENTA_ACCENT,
             components=[
                 Text(content=f"Hey {user.mention},"),
                 Text(content=(
@@ -250,7 +250,7 @@ async def on_clan_chosen(
             ],
         ),
         Container(
-            accent_color=RED_ACCENT,
+            accent_color=DARK_MAGENTA_ACCENT,
             components=[
                 Section(
                     components=[Text(content="\n".join(lines))],

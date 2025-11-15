@@ -26,7 +26,7 @@ from hikari.impl import (
 )
 
 from utils.mongo import MongoClient
-from utils.constants import RED_ACCENT
+from utils.constants import DARK_MAGENTA_ACCENT
 
 loader = lightbulb.Loader()
 
@@ -183,7 +183,7 @@ async def create_th16_search_notification(post) -> List[Container]:
 
     components = [
         Container(
-            accent_color=RED_ACCENT,
+            accent_color=DARK_MAGENTA_ACCENT,
             components=components_list
         )
     ]

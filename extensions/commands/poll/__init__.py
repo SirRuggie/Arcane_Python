@@ -62,7 +62,7 @@ async def end_poll(poll_id: str, guild_id: str, channel_id: str, message_id: str
                 MediaGalleryComponentBuilder as Media,
                 MediaGalleryItemBuilder as MediaItem,
             )
-            from utils.constants import RED_ACCENT
+            from utils.constants import DARK_MAGENTA_ACCENT
             
             # Calculate final results
             results = calculate_percentages(poll_data["votes"], poll_data["options"])
@@ -154,7 +154,7 @@ async def end_poll(poll_id: str, guild_id: str, channel_id: str, message_id: str
             
             # Create the Container with gray accent for ended polls
             container = Container(
-                accent_color=RED_ACCENT,
+                accent_color=DARK_MAGENTA_ACCENT,
                 components=header_components + poll_components
             )
             

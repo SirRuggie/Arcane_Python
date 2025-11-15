@@ -19,7 +19,7 @@ from hikari.impl import (
 )
 
 from extensions.components import register_action
-from utils.constants import RED_ACCENT, GREEN_ACCENT, GOLD_ACCENT
+from utils.constants import DARK_MAGENTA_ACCENT, GREEN_ACCENT, GOLD_ACCENT
 from utils.mongo import MongoClient
 from utils.emoji import emojis
 from extensions.commands.clan.report.helpers import get_clan_by_tag, get_clan_options, get_categorized_clan_components, create_progress_header
@@ -103,7 +103,7 @@ async def show_member_left_flow(
     if not categorized_components:
         components = [
             Container(
-                accent_color=RED_ACCENT,
+                accent_color=DARK_MAGENTA_ACCENT,
                 components=[
                     Text(content="## ❌ No Clans Available"),
                     Text(content="No clans found in the database."),
@@ -189,7 +189,7 @@ async def handle_clan_selection(
     if not has_permission:
         components = [
             Container(
-                accent_color=RED_ACCENT,
+                accent_color=DARK_MAGENTA_ACCENT,
                 components=[
                     Text(content="## ❌ Permission Denied"),
                     Text(content=f"Only leadership of **{clan.name}** can process refunds."),
@@ -281,7 +281,7 @@ async def handle_clan_selection(
     # Create the selection menu
     components = [
         Container(
-            accent_color=RED_ACCENT,
+            accent_color=DARK_MAGENTA_ACCENT,
             components=[
                 Text(content=create_progress_header(2, 2, ["Select Clan", "Select Member"])),
                 Separator(divider=True),

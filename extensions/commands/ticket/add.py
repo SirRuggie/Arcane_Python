@@ -6,7 +6,7 @@ from typing import Optional
 
 from extensions.commands.ticket import loader, ticket
 from utils.mongo import MongoClient
-from utils.constants import RED_ACCENT, GREEN_ACCENT
+from utils.constants import DARK_MAGENTA_ACCENT, GREEN_ACCENT
 
 # Import Components V2
 from hikari.impl import (
@@ -58,7 +58,7 @@ class AddToTicketCommand(
             await ctx.respond(
                 components=[
                     Container(
-                        accent_color=RED_ACCENT,
+                        accent_color=DARK_MAGENTA_ACCENT,
                         components=[
                             Text(content="## ❌ Missing Parameters"),
                             Text(content="You must provide at least one of: **user** or **role**"),
@@ -86,7 +86,7 @@ class AddToTicketCommand(
             await ctx.respond(
                 components=[
                     Container(
-                        accent_color=RED_ACCENT,
+                        accent_color=DARK_MAGENTA_ACCENT,
                         components=[
                             Text(content="## ❌ Not a Ticket Channel"),
                             Text(content="This command can only be used in an active ticket channel."),
@@ -174,7 +174,7 @@ class AddToTicketCommand(
 
             error_components = [
                 Container(
-                    accent_color=RED_ACCENT if not added else 0xFFA500,  # Red for complete failure, Orange for partial
+                    accent_color=DARK_MAGENTA_ACCENT if not added else 0xFFA500,  # Red for complete failure, Orange for partial
                     components=[
                         Text(content=error_message),
                         Separator(divider=True),

@@ -11,7 +11,7 @@ from hikari.impl import (
     MediaGalleryItemBuilder as MediaItem,
 )
 
-from utils.constants import RED_ACCENT
+from utils.constants import DARK_MAGENTA_ACCENT
 from utils.emoji import emojis
 from extensions.components import register_action
 from utils.mongo import MongoClient
@@ -59,7 +59,7 @@ async def view_clan_list(
     # View Clan List message with enhanced formatting
     components = [
         Container(
-            accent_color=RED_ACCENT,
+            accent_color=DARK_MAGENTA_ACCENT,
             components=[
                 Section(
                     accessory=Thumbnail(media=guild_icon),

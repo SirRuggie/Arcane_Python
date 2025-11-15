@@ -13,7 +13,7 @@ import asyncio
 from extensions.components import register_action
 from utils.mongo import MongoClient
 from utils.cloudinary_client import CloudinaryClient
-from utils.constants import RED_ACCENT, GREEN_ACCENT, BLUE_ACCENT, GOLD_ACCENT, FWA_WAR_BASE, FWA_ACTIVE_WAR_BASE
+from utils.constants import DARK_MAGENTA_ACCENT, GREEN_ACCENT, BLUE_ACCENT, GOLD_ACCENT, FWA_WAR_BASE, FWA_ACTIVE_WAR_BASE
 from utils.emoji import emojis
 from extensions.commands.clan.dashboard.dashboard import dashboard_page
 
@@ -386,7 +386,7 @@ async def manage_fwa_data(
         # User doesn't have permission - show access denied message
         components = [
             Container(
-                accent_color=RED_ACCENT,
+                accent_color=DARK_MAGENTA_ACCENT,
                 components=[
                     Text(content="## ❌ Access Denied"),
                     Separator(divider=True),
@@ -781,7 +781,7 @@ async def fwa_images_submit(
         await ctx.interaction.edit_initial_response(
             components=[
                 Container(
-                    accent_color=RED_ACCENT,
+                    accent_color=DARK_MAGENTA_ACCENT,
                     components=[
                         Text(content="## ❌ Upload Failed"),
                         Text(content=f"Error: {str(e)[:200]}"),

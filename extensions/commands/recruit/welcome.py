@@ -6,7 +6,7 @@ from extensions.commands.recruit import recruit
 from extensions.components import register_action
 from utils.mongo import MongoClient
 from utils.classes import Clan
-from utils.constants import RED_ACCENT
+from utils.constants import DARK_MAGENTA_ACCENT
 
 from hikari.impl import (
     MessageActionRowBuilder as ActionRow,
@@ -173,7 +173,7 @@ class Welcome(
 
         components = [
             Container(
-                accent_color=RED_ACCENT,
+                accent_color=DARK_MAGENTA_ACCENT,
                 components=component_list,
             )
         ]
@@ -213,7 +213,7 @@ async def on_clan_welcome_chosen(
     if not raw:
         components = [
             Container(
-                accent_color=RED_ACCENT,
+                accent_color=DARK_MAGENTA_ACCENT,
                 components=[Text(content="⚠️ I couldn't find that clan in our database.")]
             )
         ]
@@ -226,7 +226,7 @@ async def on_clan_welcome_chosen(
     if not db_clan.recruit_welcome:
         components = [
             Container(
-                accent_color=RED_ACCENT,
+                accent_color=DARK_MAGENTA_ACCENT,
                 components=[
                     Text(content=(
                         f"⚠️ {db_clan.name} doesn't have a welcome message set up.\n\n"
@@ -243,7 +243,7 @@ async def on_clan_welcome_chosen(
     if not db_clan.chat_channel_id:
         components = [
             Container(
-                accent_color=RED_ACCENT,
+                accent_color=DARK_MAGENTA_ACCENT,
                 components=[
                     Text(content=(
                         f"⚠️ {db_clan.name} doesn't have a chat channel configured.\n\n"
@@ -267,7 +267,7 @@ async def on_clan_welcome_chosen(
         # Update the original message to show success
         components = [
             Container(
-                accent_color=RED_ACCENT,
+                accent_color=DARK_MAGENTA_ACCENT,
                 components=[
                     Text(content=(
                         f"✅ Welcome message sent to {user.mention} in <#{db_clan.chat_channel_id}>!\n\n"
@@ -282,7 +282,7 @@ async def on_clan_welcome_chosen(
     except Exception as e:
         components = [
             Container(
-                accent_color=RED_ACCENT,
+                accent_color=DARK_MAGENTA_ACCENT,
                 components=[
                     Text(content=(
                         f"❌ Failed to send welcome message.\n\n"

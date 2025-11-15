@@ -22,7 +22,7 @@ from hikari.impl import (
 from extensions.commands.utilities import loader, utilities
 from extensions.components import register_action
 from utils.mongo import MongoClient
-from utils.constants import RED_ACCENT, GREEN_ACCENT
+from utils.constants import DARK_MAGENTA_ACCENT, GREEN_ACCENT
 
 # Hardcoded owner ID - ONLY this user can reboot the bot
 OWNER_ID = 505227988229554179
@@ -46,7 +46,7 @@ class Reboot(
             await ctx.respond(
                 components=[
                     Container(
-                        accent_color=RED_ACCENT,
+                        accent_color=DARK_MAGENTA_ACCENT,
                         components=[
                             Text(content=(
                                 "## ❌ Permission Denied\n\n"
@@ -71,7 +71,7 @@ class Reboot(
         # Create warning message
         components = [
             Container(
-                accent_color=RED_ACCENT,
+                accent_color=DARK_MAGENTA_ACCENT,
                 components=[
                     Text(content=(
                         "## ⚠️ Confirm Bot Reboot\n\n"
@@ -134,7 +134,7 @@ async def handle_reboot_confirm(
     # Show rebooting message
     reboot_components = [
         Container(
-            accent_color=RED_ACCENT,
+            accent_color=DARK_MAGENTA_ACCENT,
             components=[
                 Text(content=(
                     "## 🔄 Rebooting Bot...\n\n"

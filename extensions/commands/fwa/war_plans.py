@@ -15,7 +15,7 @@ from extensions.autocomplete import fwa_clans
 
 from utils.mongo import MongoClient
 from utils.classes import Clan
-from utils.constants import GREEN_ACCENT, RED_ACCENT, GOLD_ACCENT, BLUE_ACCENT
+from utils.constants import GREEN_ACCENT, DARK_MAGENTA_ACCENT, GOLD_ACCENT, BLUE_ACCENT
 from .message_templates import (
     WarMessageTemplates,
     WarCopyTexts,
@@ -192,7 +192,7 @@ class WarPlans(
         except Exception as e:
             error_components = [
                 Container(
-                    accent_color=RED_ACCENT,
+                    accent_color=DARK_MAGENTA_ACCENT,
                     components=[
                         Text(content="## ❌ **Error Posting Message**"),
                         Text(content=f"Failed to post war message: {str(e)}"),

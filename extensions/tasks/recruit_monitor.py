@@ -8,7 +8,7 @@ import coc
 from datetime import datetime, timezone, timedelta
 from typing import List, Dict
 from utils.mongo import MongoClient
-from utils.constants import GREEN_ACCENT, RED_ACCENT, BLUE_ACCENT
+from utils.constants import GREEN_ACCENT, DARK_MAGENTA_ACCENT, BLUE_ACCENT
 from utils.emoji import emojis
 from utils import bot_data
 

@@ -19,7 +19,7 @@ from hikari.impl import (
 )
 
 from extensions.components import register_action
-from utils.constants import BLUE_ACCENT, GREEN_ACCENT, GOLD_ACCENT, RED_ACCENT, validate_user_has_role
+from utils.constants import BLUE_ACCENT, GREEN_ACCENT, GOLD_ACCENT, DARK_MAGENTA_ACCENT, validate_user_has_role
 from utils.mongo import MongoClient
 from .utils import (
     is_leadership,
@@ -55,7 +55,7 @@ def build_error_message(message: str) -> list:
     """Helper to wrap error message in Components v2 container"""
     return [
         Container(
-            accent_color=RED_ACCENT,
+            accent_color=DARK_MAGENTA_ACCENT,
             components=[
                 Text(content="## ❌ Error"),
                 Separator(divider=True),
@@ -2312,7 +2312,7 @@ async def handle_search_case_submit(
     else:
         components = [
             Container(
-                accent_color=RED_ACCENT,
+                accent_color=DARK_MAGENTA_ACCENT,
                 components=[
                     Text(content="## 🔍 Case Search Result"),
                     Separator(divider=True),
@@ -3244,7 +3244,7 @@ async def handle_delete_confirm_submit(
         await ctx.interaction.edit_initial_response(
             components=[
                 Container(
-                    accent_color=RED_ACCENT,
+                    accent_color=DARK_MAGENTA_ACCENT,
                     components=[
                         Text(content="## ❌ Unauthorized"),
                         Separator(divider=True),
@@ -3264,7 +3264,7 @@ async def handle_delete_confirm_submit(
         await ctx.interaction.edit_initial_response(
             components=[
                 Container(
-                    accent_color=RED_ACCENT,
+                    accent_color=DARK_MAGENTA_ACCENT,
                     components=[
                         Text(content="## ❌ Deletion Cancelled"),
                         Separator(divider=True),
@@ -3284,7 +3284,7 @@ async def handle_delete_confirm_submit(
         await ctx.interaction.edit_initial_response(
             components=[
                 Container(
-                    accent_color=RED_ACCENT,
+                    accent_color=DARK_MAGENTA_ACCENT,
                     components=[
                         Text(content="## ❌ Staff Log Not Found"),
                         Separator(divider=True),

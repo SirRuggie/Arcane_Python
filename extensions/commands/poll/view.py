@@ -8,7 +8,7 @@ import lightbulb
 from typing import Optional
 
 from utils.mongo import MongoClient
-from utils.constants import BLUE_ACCENT, GREEN_ACCENT, RED_ACCENT
+from utils.constants import BLUE_ACCENT, GREEN_ACCENT, DARK_MAGENTA_ACCENT
 from extensions.components import register_action
 from . import loader, poll
 
@@ -144,7 +144,7 @@ async def show_poll_results(
             vote_breakdown[option_id].append(user_id)
     
     # Create embed
-    color = GREEN_ACCENT if poll_data["active"] else RED_ACCENT
+    color = GREEN_ACCENT if poll_data["active"] else DARK_MAGENTA_ACCENT
     embed = hikari.Embed(
         title=f"📊 Poll Results: {poll_data['description'][:100]}",
         color=color,

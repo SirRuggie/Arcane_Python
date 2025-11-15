@@ -29,7 +29,7 @@ from hikari.impl import (
 from extensions.components import register_action
 from utils.mongo import MongoClient
 from utils.classes import Clan
-from utils.constants import BLUE_ACCENT, GREEN_ACCENT, MAGENTA_ACCENT, RED_ACCENT
+from utils.constants import BLUE_ACCENT, GREEN_ACCENT, MAGENTA_ACCENT, DARK_MAGENTA_ACCENT
 
 from .helpers import (
     get_clan_options,
@@ -430,7 +430,7 @@ async def dr_cancel_review(
         )
         cancelled_components = [
             Container(
-                accent_color=RED_ACCENT,
+                accent_color=DARK_MAGENTA_ACCENT,
                 components=[
                     Text(content="## ❌ Submission Cancelled"),
                     Text(content="This Disboard review submission has been cancelled."),

@@ -22,7 +22,7 @@ from hikari.impl import (
 )
 
 from utils.mongo import MongoClient
-from utils.constants import BLUE_ACCENT, GREEN_ACCENT, GOLD_ACCENT, RED_ACCENT
+from utils.constants import BLUE_ACCENT, GREEN_ACCENT, GOLD_ACCENT, DARK_MAGENTA_ACCENT
 from extensions.components import register_action
 
 loader = lightbulb.Loader()
@@ -66,7 +66,7 @@ ANNOUNCEMENT_STYLES = {
     },
     "urgent": {
         "emoji": "🚨",
-        "color": RED_ACCENT,
+        "color": DARK_MAGENTA_ACCENT,
         "footer": "assets/Red_Footer.png",
         "name": "Urgent",
         "header": "URGENT NOTICE"
@@ -501,7 +501,7 @@ async def handle_announce_confirm(
     except Exception as e:
         print(f"[Announce] Error sending announcement: {e}")
         error_container = Container(
-            accent_color=RED_ACCENT,
+            accent_color=DARK_MAGENTA_ACCENT,
             components=[
                 Text(content="## ❌ Failed to Send Announcement"),
                 Separator(divider=True),
@@ -527,7 +527,7 @@ async def handle_announce_cancel(
 
     # Confirm cancellation with Components V2
     cancel_container = Container(
-        accent_color=RED_ACCENT,
+        accent_color=DARK_MAGENTA_ACCENT,
         components=[
             Text(content="## ❌ Announcement Cancelled"),
             Separator(divider=True),

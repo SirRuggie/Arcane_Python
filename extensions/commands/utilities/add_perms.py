@@ -25,7 +25,7 @@ from hikari.impl import (
 from extensions.commands.utilities import loader, utilities
 from extensions.components import register_action
 from utils.mongo import MongoClient
-from utils.constants import GREEN_ACCENT, RED_ACCENT, BLUE_ACCENT
+from utils.constants import GREEN_ACCENT, DARK_MAGENTA_ACCENT, BLUE_ACCENT
 
 # Hard-coded user ID restriction
 ALLOWED_USER_ID = 505227988229554179
@@ -217,7 +217,7 @@ class AddPerms(
         if ctx.user.id != ALLOWED_USER_ID:
             components = [
                 Container(
-                    accent_color=RED_ACCENT,
+                    accent_color=DARK_MAGENTA_ACCENT,
                     components=[
                         Text(content="## ❌ Access Denied"),
                         Separator(divider=True),
@@ -593,7 +593,7 @@ async def apply_permissions(
     except Exception as e:
         error_components = [
             Container(
-                accent_color=RED_ACCENT,
+                accent_color=DARK_MAGENTA_ACCENT,
                 components=[
                     Text(content=(
                         f"## ❌ Failed to Apply Permissions\n\n"
@@ -691,7 +691,7 @@ async def cancel_command(
 
     components = [
         Container(
-            accent_color=RED_ACCENT,
+            accent_color=DARK_MAGENTA_ACCENT,
             components=[
                 Text(content="## ❌ Cancelled\n\nPermission changes have been cancelled."),
                 Media(items=[MediaItem(media="assets/Red_Footer.png")])

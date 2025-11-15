@@ -7,7 +7,7 @@ from typing import Optional
 
 from extensions.commands.ticket import loader, ticket
 from utils.mongo import MongoClient
-from utils.constants import RED_ACCENT, GREEN_ACCENT, GOLD_ACCENT
+from utils.constants import DARK_MAGENTA_ACCENT, GREEN_ACCENT, GOLD_ACCENT
 
 # Import Components V2
 from hikari.impl import (
@@ -65,7 +65,7 @@ class CloseTicketCommand(
                 await ctx.respond(
                     components=[
                         Container(
-                            accent_color=RED_ACCENT,
+                            accent_color=DARK_MAGENTA_ACCENT,
                             components=[
                                 Text(content="## ❌ Not a Ticket Channel"),
                                 Text(content="This doesn't appear to be an active ticket channel."),
@@ -213,7 +213,7 @@ class CloseTicketCommand(
             await ctx.respond(
                 components=[
                     Container(
-                        accent_color=RED_ACCENT,
+                        accent_color=DARK_MAGENTA_ACCENT,
                         components=[
                             Text(content="## ❌ Ticket Closure Failed"),
                             Separator(divider=True),

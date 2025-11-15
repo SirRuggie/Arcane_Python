@@ -12,7 +12,7 @@ import uuid
 from extensions.components import register_action
 from utils.mongo import MongoClient
 from utils.classes import Clan
-from utils.constants import RED_ACCENT, GREEN_ACCENT, BLUE_ACCENT, GOLD_ACCENT, MAGENTA_ACCENT
+from utils.constants import DARK_MAGENTA_ACCENT, GREEN_ACCENT, BLUE_ACCENT, GOLD_ACCENT, MAGENTA_ACCENT
 from utils.emoji import emojis
 
 from hikari.impl import (
@@ -50,7 +50,7 @@ async def log_points_change(
         action_text = f"Awarded +{change_amount} Point(s)"
         emoji = "✅"
     elif change_amount < 0:
-        color = RED_ACCENT
+        color = DARK_MAGENTA_ACCENT
         action_text = f"Points Reduced by {abs(change_amount)} Point"
         emoji = "❌"
     else:
@@ -226,7 +226,7 @@ async def points_quick_select(
     if POINTS_MANAGER_ROLE not in ctx.interaction.member.role_ids:
         components = [
             Container(
-                accent_color=RED_ACCENT,
+                accent_color=DARK_MAGENTA_ACCENT,
                 components=[
                     Text(content="## ❌ **Permission Denied**"),
                     Text(content="You do not have permission to edit clan points."),
@@ -390,7 +390,7 @@ async def quick_clan_select(
     if POINTS_MANAGER_ROLE not in ctx.interaction.member.role_ids:
         components = [
             Container(
-                accent_color=RED_ACCENT,
+                accent_color=DARK_MAGENTA_ACCENT,
                 components=[
                     Text(content="## ❌ **Permission Denied**"),
                     Text(content="You do not have permission to edit clan points."),
@@ -1450,7 +1450,7 @@ async def month_reset_confirm(
 
     components = [
         Container(
-            accent_color=RED_ACCENT,
+            accent_color=DARK_MAGENTA_ACCENT,
             components=[
                 Text(content="## 🔄 **Monthly Reset**"),
                 Separator(divider=True),

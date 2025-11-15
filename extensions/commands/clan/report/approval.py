@@ -24,7 +24,7 @@ from hikari.impl import (
 from extensions.components import register_action
 from utils.mongo import MongoClient
 from utils.classes import Clan
-from utils.constants import GREEN_ACCENT, RED_ACCENT
+from utils.constants import GREEN_ACCENT, DARK_MAGENTA_ACCENT
 
 from .helpers import get_clan_by_tag, LOG_CHANNEL
 
@@ -92,7 +92,7 @@ async def approve_points(
         await ctx.interaction.edit_initial_response(
             components=[
                 Container(
-                    accent_color=RED_ACCENT,
+                    accent_color=DARK_MAGENTA_ACCENT,
                     components=[
                         Text(content="❌ Clan not found in database!")
                     ]
@@ -341,7 +341,7 @@ async def confirm_denial(
     # Send to log channel
     log_components = [
         Container(
-            accent_color=RED_ACCENT,
+            accent_color=DARK_MAGENTA_ACCENT,
             components=[
                 Text(content=f"## ❌ Denial: Clan Points - {clan.name}"),
 
@@ -378,7 +378,7 @@ async def confirm_denial(
 
         dm_components = [
             Container(
-                accent_color=RED_ACCENT,
+                accent_color=DARK_MAGENTA_ACCENT,
                 components=[
                     Text(content=f"## ❌ Clan Points Denied"),
                     Text(content=(

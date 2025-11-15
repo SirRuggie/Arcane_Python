@@ -20,7 +20,7 @@ from hikari.impl import (
 from extensions.commands.recruit import recruit
 from extensions.components import register_action
 from utils.mongo import MongoClient
-from utils.constants import GREEN_ACCENT, RED_ACCENT, BLUE_ACCENT, GOLD_ACCENT
+from utils.constants import GREEN_ACCENT, DARK_MAGENTA_ACCENT, BLUE_ACCENT, GOLD_ACCENT
 
 # Check if debug commands are enabled
 ENABLE_DEBUG_COMMANDS = os.getenv("ENABLE_DEBUG_COMMANDS", "false").lower() == "true"
@@ -203,7 +203,7 @@ if ENABLE_DEBUG_COMMANDS:
         if not verify_data:
             await ctx.respond(
                 components=[Container(
-                    accent_color=RED_ACCENT,
+                    accent_color=DARK_MAGENTA_ACCENT,
                     components=[
                         Text(content="❌ Verification data expired. Please run the command again."),
                         Media(items=[MediaItem(media="assets/Red_Footer.png")])

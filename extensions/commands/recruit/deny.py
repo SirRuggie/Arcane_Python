@@ -21,7 +21,7 @@ from hikari.impl import (
 
 from extensions.commands.recruit import recruit
 from extensions.components import register_action
-from utils.constants import RED_ACCENT
+from utils.constants import DARK_MAGENTA_ACCENT
 
 @recruit.register()
 class RecruitDeny(
@@ -86,7 +86,7 @@ async def process_denial(
     # Send denial message to the channel
     denial_components = [
         Container(
-            accent_color=RED_ACCENT,
+            accent_color=DARK_MAGENTA_ACCENT,
             components=[
                 Section(
                     components=[

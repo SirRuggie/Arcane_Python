@@ -7,7 +7,7 @@ from typing import Literal
 
 from extensions.commands.clan import loader, clan
 from extensions.components import register_action
-from utils.constants import RED_ACCENT, GREEN_ACCENT
+from utils.constants import DARK_MAGENTA_ACCENT, GREEN_ACCENT
 
 from hikari.impl import (
     ContainerComponentBuilder as Container,
@@ -170,7 +170,7 @@ def create_role_removed_response(member: hikari.Member, executor: hikari.Member)
     """Create response for successful role removal"""
     return [
         Container(
-            accent_color=RED_ACCENT,
+            accent_color=DARK_MAGENTA_ACCENT,
             components=[
                 Text(content="## ✅ Right Hand Leader Role Removed"),
                 Separator(divider=True),
@@ -190,7 +190,7 @@ def create_already_has_role_response(member: hikari.Member, executor: hikari.Mem
     """Create response when user already has the role"""
     return [
         Container(
-            accent_color=RED_ACCENT,
+            accent_color=DARK_MAGENTA_ACCENT,
             components=[
                 Text(content="## ℹ️ User Already Has Role"),
                 Separator(divider=True),
@@ -210,7 +210,7 @@ def create_doesnt_have_role_response(member: hikari.Member, executor: hikari.Mem
     """Create response when user doesn't have the role"""
     return [
         Container(
-            accent_color=RED_ACCENT,
+            accent_color=DARK_MAGENTA_ACCENT,
             components=[
                 Text(content="## ℹ️ User Doesn't Have Role"),
                 Separator(divider=True),

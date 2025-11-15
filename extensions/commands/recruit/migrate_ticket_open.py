@@ -22,7 +22,7 @@ from hikari.impl import (
 from extensions.commands.recruit import recruit
 from extensions.components import register_action
 from utils.mongo import MongoClient
-from utils.constants import GREEN_ACCENT, RED_ACCENT, BLUE_ACCENT
+from utils.constants import GREEN_ACCENT, DARK_MAGENTA_ACCENT, BLUE_ACCENT
 
 # Check if debug commands are enabled
 ENABLE_DEBUG_COMMANDS = os.getenv("ENABLE_DEBUG_COMMANDS", "false").lower() == "true"
@@ -183,7 +183,7 @@ if ENABLE_DEBUG_COMMANDS:
         if not migration_data:
             await ctx.respond(
                 components=[Container(
-                    accent_color=RED_ACCENT,
+                    accent_color=DARK_MAGENTA_ACCENT,
                     components=[
                         Text(content="❌ Migration data expired. Please try again."),
                         Media(items=[MediaItem(media="assets/Red_Footer.png")])
@@ -257,7 +257,7 @@ if ENABLE_DEBUG_COMMANDS:
         
         components = [
             Container(
-                accent_color=RED_ACCENT,
+                accent_color=DARK_MAGENTA_ACCENT,
                 components=[
                     Text(content="## ❌ Migration Cancelled"),
                     Text(content="No changes were made to the database."),

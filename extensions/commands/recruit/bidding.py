@@ -33,7 +33,7 @@ from extensions.commands.recruit import recruit
 from utils.mongo import MongoClient
 from utils.classes import Clan
 from utils.emoji import emojis
-from utils.constants import RED_ACCENT, GREEN_ACCENT, BLUE_ACCENT, GOLD_ACCENT
+from utils.constants import DARK_MAGENTA_ACCENT, GREEN_ACCENT, BLUE_ACCENT, GOLD_ACCENT
 
 # Helper function for safe placeholder_points adjustments
 async def safe_adjust_placeholder_points(mongo: MongoClient, clan_tag: str, amount: float, operation: str = "inc"):
@@ -287,7 +287,7 @@ async def handle_recruit_selection(
     if not recruit:
         error_components = [
             Container(
-                accent_color=RED_ACCENT,
+                accent_color=DARK_MAGENTA_ACCENT,
                 components=[
                     Text(content="❌ Recruit not found."),
                     Media(items=[MediaItem(media="assets/Red_Footer.png")])
@@ -301,7 +301,7 @@ async def handle_recruit_selection(
     if not recruit.get("ticket_thread_id"):
         error_components = [
             Container(
-                accent_color=RED_ACCENT,
+                accent_color=DARK_MAGENTA_ACCENT,
                 components=[
                     Text(content="❌ No thread found for this recruit."),
                     Media(items=[MediaItem(media="assets/Red_Footer.png")])
@@ -317,7 +317,7 @@ async def handle_recruit_selection(
     if recruit.get("activeBid", False):
         error_components = [
             Container(
-                accent_color=RED_ACCENT,
+                accent_color=DARK_MAGENTA_ACCENT,
                 components=[
                     Text(content="❌ Bidding is already active for this recruit."),
                     Media(items=[MediaItem(media="assets/Red_Footer.png")])
@@ -339,7 +339,7 @@ async def handle_recruit_selection(
         if valid_bids:
             error_components = [
                 Container(
-                    accent_color=RED_ACCENT,
+                    accent_color=DARK_MAGENTA_ACCENT,
                     components=[
                         Text(
                             content="❌ There's already an active bidding session for this recruit. Please wait for it to complete."),
@@ -366,7 +366,7 @@ async def handle_recruit_selection(
     if not result:
         error_components = [
             Container(
-                accent_color=RED_ACCENT,
+                accent_color=DARK_MAGENTA_ACCENT,
                 components=[
                     Text(content="❌ Bidding is already active for this recruit."),
                     Media(items=[MediaItem(media="assets/Red_Footer.png")])
@@ -475,7 +475,7 @@ async def handle_recruit_selection(
 
         error_components = [
             Container(
-                accent_color=RED_ACCENT,
+                accent_color=DARK_MAGENTA_ACCENT,
                 components=[
                     Text(content="❌ Failed to start bidding. Please try again."),
                     Text(content=f"Error: {str(e)[:100]}"),
@@ -725,7 +725,7 @@ async def handle_bid_amount_modal(
     if not session:
         await ctx.interaction.edit_initial_response(
             components=[Container(
-                accent_color=RED_ACCENT,
+                accent_color=DARK_MAGENTA_ACCENT,
                 components=[
                     Text(content="❌ Session expired."),
                     Media(items=[MediaItem(media="assets/Red_Footer.png")])
@@ -742,7 +742,7 @@ async def handle_bid_amount_modal(
     if not bidding_session:
         await ctx.interaction.edit_initial_response(
             components=[Container(
-                accent_color=RED_ACCENT,
+                accent_color=DARK_MAGENTA_ACCENT,
                 components=[
                     Text(content="❌ Bidding session not found."),
                     Media(items=[MediaItem(media="assets/Red_Footer.png")])
@@ -755,7 +755,7 @@ async def handle_bid_amount_modal(
     async def show_error(error_message: str):
         await ctx.interaction.edit_initial_response(
             components=[Container(
-                accent_color=RED_ACCENT,
+                accent_color=DARK_MAGENTA_ACCENT,
                 components=[
                     Text(content=f"❌ {error_message}"),
                     Media(items=[MediaItem(media="assets/Red_Footer.png")])
@@ -938,7 +938,7 @@ async def handle_remove_bid(
     # Show select menu
     components = [
         Container(
-            accent_color=RED_ACCENT,
+            accent_color=DARK_MAGENTA_ACCENT,
             components=[
                 Text(content="## ❌ Remove Bid"),
                 Text(content="Select which clan's bid to remove:"),
@@ -1036,7 +1036,7 @@ async def confirm_bid_removal(
     if not session:
         await ctx.interaction.edit_initial_response(
             components=[Container(
-                accent_color=RED_ACCENT,
+                accent_color=DARK_MAGENTA_ACCENT,
                 components=[
                     Text(content="❌ Session expired."),
                     Media(items=[MediaItem(media="assets/Red_Footer.png")])
@@ -1088,7 +1088,7 @@ async def confirm_bid_removal(
                 # Recreate the select menu with error message
                 await ctx.interaction.edit_initial_response(
                     components=[Container(
-                        accent_color=RED_ACCENT,
+                        accent_color=DARK_MAGENTA_ACCENT,
                         components=[
                             Text(content="## ❌ Remove Bid"),
                             Text(content="⚠️ You must type 'REMOVE' exactly. Please try again:"),
@@ -1110,7 +1110,7 @@ async def confirm_bid_removal(
         # If no options, show error
         await ctx.interaction.edit_initial_response(
             components=[Container(
-                accent_color=RED_ACCENT,
+                accent_color=DARK_MAGENTA_ACCENT,
                 components=[
                     Text(content="❌ No bids found to remove."),
                     Media(items=[MediaItem(media="assets/Red_Footer.png")])
@@ -1128,7 +1128,7 @@ async def confirm_bid_removal(
     if not main_session:
         await ctx.interaction.edit_initial_response(
             components=[Container(
-                accent_color=RED_ACCENT,
+                accent_color=DARK_MAGENTA_ACCENT,
                 components=[
                     Text(content="❌ Bidding session not found."),
                     Media(items=[MediaItem(media="assets/Red_Footer.png")])
@@ -1162,7 +1162,7 @@ async def confirm_bid_removal(
     if result.modified_count == 0:
         await ctx.interaction.edit_initial_response(
             components=[Container(
-                accent_color=RED_ACCENT,
+                accent_color=DARK_MAGENTA_ACCENT,
                 components=[
                     Text(content="❌ No bid found to remove."),
                     Media(items=[MediaItem(media="assets/Red_Footer.png")])
@@ -1194,7 +1194,7 @@ async def confirm_bid_removal(
     # Log the removal
     log_components = [
         Container(
-            accent_color=RED_ACCENT,
+            accent_color=DARK_MAGENTA_ACCENT,
             components=[
                 Text(content="Bid Removed"),
                 Separator(divider=True),
@@ -1306,7 +1306,7 @@ async def handle_no_bids(
 
     components = [
         Container(
-            accent_color=RED_ACCENT,
+            accent_color=DARK_MAGENTA_ACCENT,
             components=[
                 Text(content=f"# Bids for {recruit['player_name']}"),
 

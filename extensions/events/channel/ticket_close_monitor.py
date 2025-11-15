@@ -8,7 +8,7 @@ import coc
 from datetime import datetime, timezone, timedelta
 from typing import Optional, Dict, List
 from utils.mongo import MongoClient
-from utils.constants import RED_ACCENT, GOLD_ACCENT, GREEN_ACCENT
+from utils.constants import DARK_MAGENTA_ACCENT, GOLD_ACCENT, GREEN_ACCENT
 from utils.emoji import emojis
 
 # Import Components V2
@@ -319,7 +319,7 @@ async def process_no_clan_joined(recruit: Dict, bid_data: Optional[Dict], bot_ap
     # Create the message for no clan joined
     components = [
         Container(
-            accent_color=RED_ACCENT,
+            accent_color=DARK_MAGENTA_ACCENT,
             components=[
                 Text(content=(
                     f"## 🚫 Didn't Get Bid On - Left Server / Ticket Closed - TH{recruit.get('player_th_level', '??')}"
@@ -592,7 +592,7 @@ async def process_with_bids_recruitment(recruit: Dict, bid_data: Dict, player_cl
         # Send failed recruitment notification
         failure_components = [
             Container(
-                accent_color=RED_ACCENT,
+                accent_color=DARK_MAGENTA_ACCENT,
                 components=[
                     Text(content=(
                         f"## ❌ Failed Bid Recruitment - {winning_clan['name'] if winning_clan else 'Unknown'} - "

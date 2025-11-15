@@ -11,7 +11,7 @@ from typing import Optional
 from extensions.commands.ticket import loader, ticket
 from extensions.components import register_action
 from utils.mongo import MongoClient
-from utils.constants import RED_ACCENT, GOLD_ACCENT
+from utils.constants import DARK_MAGENTA_ACCENT, GOLD_ACCENT
 from utils.emoji import emojis
 
 # Import Components V2
@@ -213,7 +213,7 @@ async def handle_manual_ticket_modal(
             await ctx.interaction.edit_initial_response(
                 components=[
                     Container(
-                        accent_color=RED_ACCENT,
+                        accent_color=DARK_MAGENTA_ACCENT,
                         components=[
                             Text(content="## ❌ Active Ticket Already Exists"),
                             Text(content=f"An active ticket already exists for player tag `{player_tag}`\n"
@@ -250,7 +250,7 @@ async def handle_manual_ticket_modal(
             await ctx.interaction.edit_initial_response(
                 components=[
                     Container(
-                        accent_color=RED_ACCENT,
+                        accent_color=DARK_MAGENTA_ACCENT,
                         components=[
                             Text(content="## ❌ User Not Found"),
                             Text(content=f"Could not find user with ID {user_id}"),
@@ -512,7 +512,7 @@ async def handle_manual_ticket_modal(
 
         error_components = [
             Container(
-                accent_color=RED_ACCENT,
+                accent_color=DARK_MAGENTA_ACCENT,
                 components=[
                     Text(content="## ❌ Ticket Creation Failed"),
                     Separator(divider=True),

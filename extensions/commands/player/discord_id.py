@@ -11,7 +11,7 @@ import lightbulb
 from typing import Optional
 
 from extensions.commands.player import loader, player
-from utils.constants import GREEN_ACCENT, RED_ACCENT, GOLD_ACCENT
+from utils.constants import GREEN_ACCENT, DARK_MAGENTA_ACCENT, GOLD_ACCENT
 
 from hikari.impl import (
     ContainerComponentBuilder as Container,
@@ -89,7 +89,7 @@ class PlayerDiscordId(
         if not PLAYER_TAG_PATTERN.match(player_tag):
             components = [
                 Container(
-                    accent_color=RED_ACCENT,
+                    accent_color=DARK_MAGENTA_ACCENT,
                     components=[
                         Text(content="## ❌ Invalid Player Tag"),
                         Separator(divider=True),

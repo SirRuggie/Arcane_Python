@@ -15,7 +15,7 @@ from hikari.impl import (
     MediaGalleryItemBuilder as MediaItem,
     SeparatorComponentBuilder as Separator
 )
-from utils.constants import BLUE_ACCENT, RED_ACCENT
+from utils.constants import BLUE_ACCENT, DARK_MAGENTA_ACCENT
 
 
 # Register this event with the bot
@@ -176,7 +176,7 @@ async def process_screenshot_upload(
         # Create error message
         error_components = [
             Container(
-                accent_color=RED_ACCENT,
+                accent_color=DARK_MAGENTA_ACCENT,
                 components=[
                     Text(content=f"❌ <@{session_data['user_id']}> Failed to process screenshot."),
                     Text(content=f"**Error:** {str(e)[:200]}"),

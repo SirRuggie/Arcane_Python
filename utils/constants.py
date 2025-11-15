@@ -1,6 +1,5 @@
 import hikari
 
-RED_ACCENT = hikari.Color.from_hex_code("#AA0000")
 GOLD_ACCENT = hikari.Color.from_hex_code("FFD700")
 BLUE_ACCENT = hikari.Color.from_hex_code("0066FF")
 GREEN_ACCENT = hikari.Color.from_hex_code("00B237")

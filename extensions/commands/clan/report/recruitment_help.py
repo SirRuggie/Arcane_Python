@@ -27,7 +27,7 @@ from hikari.impl import (
 from extensions.components import register_action
 from utils.mongo import MongoClient
 from utils.classes import Clan
-from utils.constants import BLUE_ACCENT, GREEN_ACCENT, RED_ACCENT, GOLD_ACCENT
+from utils.constants import BLUE_ACCENT, GREEN_ACCENT, DARK_MAGENTA_ACCENT, GOLD_ACCENT
 from utils.emoji import emojis
 
 from .helpers import get_clan_by_tag, get_clan_options, get_categorized_clan_components, create_progress_header
@@ -132,7 +132,7 @@ async def rh_clan_selected(
             await ctx.respond(
                 components=[
                     Container(
-                        accent_color=RED_ACCENT,
+                        accent_color=DARK_MAGENTA_ACCENT,
                         components=[
                             Text(content="## ❌ Posting Restricted"),
                             Text(content=(
@@ -370,7 +370,7 @@ async def rh_confirm_submission(
         await ctx.interaction.edit_initial_response(
             components=[
                 Container(
-                    accent_color=RED_ACCENT,
+                    accent_color=DARK_MAGENTA_ACCENT,
                     components=[Text(content="❌ Submission data not found!")]
                 )
             ]
@@ -565,7 +565,7 @@ async def rh_confirm_submission(
         await ctx.interaction.edit_initial_response(
             components=[
                 Container(
-                    accent_color=RED_ACCENT,
+                    accent_color=DARK_MAGENTA_ACCENT,
                     components=[
                         Text(content=f"❌ Error posting recruitment help: {str(e)}")
                     ]

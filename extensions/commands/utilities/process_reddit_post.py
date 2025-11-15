@@ -31,7 +31,7 @@ from hikari.impl import (
 )
 
 from utils.mongo import MongoClient
-from utils.constants import RED_ACCENT, GREEN_ACCENT
+from utils.constants import DARK_MAGENTA_ACCENT, GREEN_ACCENT
 from ..utilities import utilities
 
 loader = lightbulb.Loader()
@@ -113,7 +113,7 @@ async def create_points_notification(clan_data: Dict) -> List[Container]:
 
     components = [
         Container(
-            accent_color=RED_ACCENT,
+            accent_color=DARK_MAGENTA_ACCENT,
             components=[
                 Section(
                     components=[
@@ -148,7 +148,7 @@ async def create_reddit_post_notification(post, clan_data: Dict, manual: bool = 
     
     components = [
         Container(
-            accent_color=RED_ACCENT,
+            accent_color=DARK_MAGENTA_ACCENT,
             components=[
                 Section(
                     components=[

@@ -23,7 +23,7 @@ from hikari.impl import (
 from extensions.commands.utilities import loader, utilities
 from extensions.components import register_action
 from utils.mongo import MongoClient
-from utils.constants import RED_ACCENT, GREEN_ACCENT
+from utils.constants import DARK_MAGENTA_ACCENT, GREEN_ACCENT
 from utils.emoji import emojis
 
 
@@ -123,7 +123,7 @@ class PurgeCategory(
         
         components = [
             Container(
-                accent_color=RED_ACCENT,
+                accent_color=DARK_MAGENTA_ACCENT,
                 components=[
                     Text(content=(
                         f"## ⚠️ Confirm Category Deletion\n\n"
@@ -189,7 +189,7 @@ async def handle_purge_confirm(
     # Start deletion process
     progress_components = [
         Container(
-            accent_color=RED_ACCENT,
+            accent_color=DARK_MAGENTA_ACCENT,
             components=[
                 Text(content=(
                     f"## 🗑️ Purging Category...\n\n"
@@ -283,7 +283,7 @@ async def handle_purge_confirm(
             
             result_components = [
                 Container(
-                    accent_color=RED_ACCENT,
+                    accent_color=DARK_MAGENTA_ACCENT,
                     components=[
                         Text(content=(
                             f"## ⚠️ Partial Deletion\n\n"
@@ -306,7 +306,7 @@ async def handle_purge_confirm(
     except Exception as e:
         error_components = [
             Container(
-                accent_color=RED_ACCENT,
+                accent_color=DARK_MAGENTA_ACCENT,
                 components=[
                     Text(content=(
                         f"## ❌ Purge Failed\n\n"

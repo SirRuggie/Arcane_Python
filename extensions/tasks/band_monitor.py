@@ -20,7 +20,7 @@ from hikari.impl import (
 
 from extensions.components import register_action
 from utils.mongo import MongoClient
-from utils.constants import RED_ACCENT, GREEN_ACCENT
+from utils.constants import DARK_MAGENTA_ACCENT, GREEN_ACCENT
 from utils.emoji import emojis
 
 loader = lightbulb.Loader()
@@ -124,7 +124,7 @@ async def send_war_sync_to_discord(post):
     # Create components using V2 style
     components = [
         Container(
-            accent_color=RED_ACCENT,
+            accent_color=DARK_MAGENTA_ACCENT,
             components=[
                 Text(content="## ⚔️ War Sync Event has been posted."),
                 Text(content=f"<@&{ALLOWED_ROLE_ID}> - A new FWA War Sync has been scheduled!"),
@@ -264,7 +264,7 @@ async def on_war_response(
     # Update the message with new responses
     components = [
         Container(
-            accent_color=RED_ACCENT,
+            accent_color=DARK_MAGENTA_ACCENT,
             components=[
                 Text(content="## ⚔️ War Sync Event has been posted."),
                 Text(content=f"<@&{ALLOWED_ROLE_ID}> - A new FWA War Sync has been scheduled!"),

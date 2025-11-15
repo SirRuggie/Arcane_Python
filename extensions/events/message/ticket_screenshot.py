@@ -27,7 +27,7 @@ from hikari.impl import (
     MediaGalleryItemBuilder as MediaItem,
 )
 
-from utils.constants import RED_ACCENT, GREEN_ACCENT, BLUE_ACCENT
+from utils.constants import DARK_MAGENTA_ACCENT, GREEN_ACCENT, BLUE_ACCENT
 from utils.mongo import MongoClient
 from utils.emoji import emojis
 from extensions.events.message.ticket_account_collection import trigger_account_collection
@@ -72,7 +72,7 @@ async def send_screenshot_reminder(channel_id: int, user_id: int) -> Optional[hi
     try:
         reminder_components = [
             Container(
-                accent_color=RED_ACCENT,
+                accent_color=DARK_MAGENTA_ACCENT,
                 components=[
                     Text(content=(
                         f"{emojis.Alert_Strobing} **Screenshot Required** {emojis.Alert_Strobing}\n\n"

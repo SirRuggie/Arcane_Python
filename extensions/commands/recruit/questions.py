@@ -23,7 +23,7 @@ from hikari.impl import (
 from extensions.commands.recruit import recruit
 from extensions.commands.fwa.helpers import get_fwa_base_object
 from utils.constants import (
-    RED_ACCENT,
+    DARK_MAGENTA_ACCENT,
     GOLD_ACCENT,
     BLUE_ACCENT,
     GREEN_ACCENT,
@@ -79,7 +79,7 @@ async def primary_questions(
     if choice == "attack_strategies":
         components = [
             Container(
-                accent_color=RED_ACCENT,
+                accent_color=DARK_MAGENTA_ACCENT,
                 components=[
                     Text(content=f"## ⚔️ **Attack Strategy Breakdown** · {user.mention}"),
                     Separator(divider=True),
@@ -105,7 +105,7 @@ async def primary_questions(
     elif choice == "future_clan_expectations":
         components = [
             Container(
-                accent_color=RED_ACCENT,
+                accent_color=DARK_MAGENTA_ACCENT,
                 components=[
                     Text(content=f"## 🔮 **Future Clan Expectations** · {user.mention}"),
                     Separator(divider=True),
@@ -136,7 +136,7 @@ async def primary_questions(
     elif choice == "discord_basic_skills":
         components = [
             Container(
-                accent_color=RED_ACCENT,
+                accent_color=DARK_MAGENTA_ACCENT,
                 components=[
                     Text(content=f"## 🎓 **Discord Basics Check** · {user.mention}"),
                     Separator(divider=True),
@@ -159,7 +159,7 @@ async def primary_questions(
     elif choice == "discord_basic_skills_2":
         components = [
             Container(
-                accent_color=RED_ACCENT,
+                accent_color=DARK_MAGENTA_ACCENT,
                 components=[
                     Text(content=f"## 🎯 **Master Discord Communication** · {user.mention}"),
                     Separator(divider=True),
@@ -184,7 +184,7 @@ async def primary_questions(
     elif choice == "age_bracket_&_timezone":
         components = [
             Container(
-                accent_color=RED_ACCENT,
+                accent_color=DARK_MAGENTA_ACCENT,
                 components=[
                     Text(content=f"## ⏳ **What's Your Age Bracket?** · {user.mention}"),
                     Separator(divider=True),
@@ -249,7 +249,7 @@ async def primary_questions(
     elif choice == "leaders_checking_you_out":
         components = [
             Container(
-                accent_color=RED_ACCENT,
+                accent_color=DARK_MAGENTA_ACCENT,
                 components=[
                     Text(content=f"## 🔍 **Application Under Review** · {user.mention}"),
                     Separator(divider=True),
@@ -378,7 +378,7 @@ async def on_age_button(
             Text(content=f"🎉 **16 & Under Registered!** · {user.mention}"),
 
             Container(
-                accent_color=RED_ACCENT,
+                accent_color=DARK_MAGENTA_ACCENT,
                 components=[
                     Text(
                         content=(
@@ -406,7 +406,7 @@ async def on_age_button(
             Text(content=f"🎮 **17–25 Confirmed** · {user.mention}"),
 
             Container(
-                accent_color=RED_ACCENT,
+                accent_color=DARK_MAGENTA_ACCENT,
                 components=[
                     Text(
                         content=(
@@ -433,7 +433,7 @@ async def on_age_button(
             Text(content=f"🏅 **Over 25 Confirmed** · {user.mention}"),
 
             Container(
-                accent_color=RED_ACCENT,
+                accent_color=DARK_MAGENTA_ACCENT,
                 components=[
                     Text(
                         content=(
@@ -460,7 +460,7 @@ async def on_age_button(
         Text(content=f"🌐 **Set Your Time Zone** · {user.mention}"),
 
         Container(
-            accent_color=RED_ACCENT,
+            accent_color=DARK_MAGENTA_ACCENT,
             components=[
                 Text(content="To help us match you with the right clan and events, let’s set your timezone.\n\n"),
                 Section(
@@ -1076,7 +1076,7 @@ async def explanations(
     elif choice == "fwa_war_plans":
         components = [
             Container(
-                accent_color=RED_ACCENT,
+                accent_color=DARK_MAGENTA_ACCENT,
                 components=[
                     Text(content=f"## ⚔️ **FWA War Plans** ⚔️ · {user.mention}"),
                     Separator(divider=True),
@@ -1102,7 +1102,7 @@ async def explanations(
                 ]
             ),
             Container(
-                accent_color=RED_ACCENT,
+                accent_color=DARK_MAGENTA_ACCENT,
                 components=[
                     Text(content="## ⚔️ **DAILY FWA EXPECTATIONS** ⚔️"),
                     Separator(divider=True),
@@ -1126,7 +1126,7 @@ async def explanations(
     elif choice == "wu_fwa_partner":
         components = [
             Container(
-                accent_color=RED_ACCENT,
+                accent_color=DARK_MAGENTA_ACCENT,
                 components=[
                     Text(content=f"## 🤝 **FWA Partner Invitation** · {user.mention}"),
                     Separator(divider=True),
@@ -1193,7 +1193,7 @@ async def keep_it_moving(
         components = [
             Text(content=f"{user.mention}"),
             Container(
-                accent_color=RED_ACCENT,
+                accent_color=DARK_MAGENTA_ACCENT,
                 components=[
                     Text(
                         content=(
@@ -1211,7 +1211,7 @@ async def keep_it_moving(
         components = [
             Text(content=f"{user.mention}"),
             Container(
-                accent_color=RED_ACCENT,
+                accent_color=DARK_MAGENTA_ACCENT,
                 components=[
                     Text(
                         content=(
@@ -1229,7 +1229,7 @@ async def keep_it_moving(
         components = [
             Text(content=f"{user.mention}"),
             Container(
-                accent_color=RED_ACCENT,
+                accent_color=DARK_MAGENTA_ACCENT,
                 components=[
                     Text(
                         content=(
@@ -1247,7 +1247,7 @@ async def keep_it_moving(
         components = [
             Text(content=f"{user.mention}"),
             Container(
-                accent_color=RED_ACCENT,
+                accent_color=DARK_MAGENTA_ACCENT,
                 components=[
                     Text(
                         content=(
@@ -1291,7 +1291,7 @@ async def recruit_questions_page(
 ):
     components = [
         Container(
-            accent_color=RED_ACCENT,
+            accent_color=DARK_MAGENTA_ACCENT,
             components=[
                 Text(content=(
                     "An all-in-one toolkit to efficiently recruit candidates into the Kings Alliance.\n\n"

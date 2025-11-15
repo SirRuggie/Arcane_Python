@@ -8,7 +8,7 @@ from extensions.commands.fwa import fwa
 from .helpers import get_fwa_base_object
 from utils.emoji import emojis
 
-from utils.constants import RED_ACCENT, GOLD_ACCENT, BLUE_ACCENT, GREEN_ACCENT, FWA_WAR_BASE, FWA_ACTIVE_WAR_BASE
+from utils.constants import DARK_MAGENTA_ACCENT, GOLD_ACCENT, BLUE_ACCENT, GREEN_ACCENT, FWA_WAR_BASE, FWA_ACTIVE_WAR_BASE
 
 from hikari.impl import (
     MessageActionRowBuilder as ActionRow,

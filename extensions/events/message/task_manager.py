@@ -20,7 +20,7 @@ from hikari.impl import (
 )
 
 from utils.mongo import MongoClient
-from utils.constants import RED_ACCENT, GREEN_ACCENT, BLUE_ACCENT, MAGENTA_ACCENT
+from utils.constants import DARK_MAGENTA_ACCENT, GREEN_ACCENT, BLUE_ACCENT, MAGENTA_ACCENT
 from extensions.components import register_action
 
 loader = lightbulb.Loader()
@@ -1321,7 +1321,7 @@ async def on_task_command(
                     components = create_task_embed(
                         "❌ Edit Failed",
                         f"Could not find task #{task_id} to edit.",
-                        RED_ACCENT,
+                        DARK_MAGENTA_ACCENT,
                         "This message will delete in 60 seconds"
                     )
 
@@ -1361,7 +1361,7 @@ async def on_task_command(
                         "**Required:**\n"
                         "• You need the **Admin** role to use this feature\n"
                         "• Contact a server administrator for access",
-                        RED_ACCENT,
+                        DARK_MAGENTA_ACCENT,
                         "This message will delete in 60 seconds"
                     )
                     await send_auto_delete_response(bot, event.channel_id, components)
@@ -1398,7 +1398,7 @@ async def on_task_command(
                     f"• Complete old tasks with `complete task #[id]`\n"
                     f"• Delete tasks with `del task #[id]`\n"
                     f"• Use `view tasks` to see your list",
-                    RED_ACCENT,
+                    DARK_MAGENTA_ACCENT,
                     "This message will delete in 60 seconds"
                 )
 
@@ -1417,7 +1417,7 @@ async def on_task_command(
                     f"**Try this:**\n"
                     f"• Use `view tasks` to see your task list\n"
                     f"• Check the task number is correct",
-                    RED_ACCENT,
+                    DARK_MAGENTA_ACCENT,
                     "This message will delete in 60 seconds"
                 )
             else:
@@ -1449,7 +1449,7 @@ async def on_task_command(
                         f"**Try this:**\n"
                         f"• Use `view tasks` to see your task list\n"
                         f"• Check the task number is correct",
-                        RED_ACCENT,
+                        DARK_MAGENTA_ACCENT,
                         "This message will delete in 60 seconds"
                     )
 
@@ -1468,7 +1468,7 @@ async def on_task_command(
                     f"**Try this:**\n"
                     f"• Use `view tasks` to see active tasks\n"
                     f"• Verify the task number is correct",
-                    RED_ACCENT,
+                    DARK_MAGENTA_ACCENT,
                     "This message will delete in 60 seconds"
                 )
             else:
@@ -1500,7 +1500,7 @@ async def on_task_command(
                         f"**Try this:**\n"
                         f"• Use `view tasks` to see active tasks\n"
                         f"• Verify the task number is correct",
-                        RED_ACCENT,
+                        DARK_MAGENTA_ACCENT,
                         "This message will delete in 60 seconds"
                     )
 
@@ -1546,7 +1546,7 @@ async def on_task_command(
                     f"**Try this:**\n"
                     f"• Use `view tasks` to check task numbers\n"
                     f"• Make sure you own this task",
-                    RED_ACCENT,
+                    DARK_MAGENTA_ACCENT,
                     "This message will delete in 60 seconds"
                 )
                 await send_auto_delete_response(bot, event.channel_id, components)
@@ -1770,7 +1770,7 @@ async def on_task_command(
                     "• Relative: `5m`, `1h`, `2d`\n"
                     "• Absolute: `3:30pm`, `tomorrow at 2pm`\n"
                     "• Date: `Dec 25 at 9am`",
-                    RED_ACCENT,
+                    DARK_MAGENTA_ACCENT,
                     "This message will delete in 60 seconds"
                 )
                 await send_auto_delete_response(bot, event.channel_id, components)
@@ -1786,7 +1786,7 @@ async def on_task_command(
                     f"**Try this:**\n"
                     f"• Use `view tasks` to see your task list\n"
                     f"• Check the task number is correct",
-                    RED_ACCENT,
+                    DARK_MAGENTA_ACCENT,
                     "This message will delete in 60 seconds"
                 )
                 await send_auto_delete_response(bot, event.channel_id, components)
@@ -1817,7 +1817,7 @@ async def on_task_command(
                 components = create_task_embed(
                     "❌ Reminder Failed",
                     "Could not create the reminder. Please try again.",
-                    RED_ACCENT,
+                    DARK_MAGENTA_ACCENT,
                     "This message will delete in 60 seconds"
                 )
 
@@ -1884,7 +1884,7 @@ async def on_task_command(
                     "• `America/Chicago`\n"
                     "• `Europe/London`\n"
                     "• `UTC`",
-                    RED_ACCENT,
+                    DARK_MAGENTA_ACCENT,
                     "This message will delete in 60 seconds"
                 )
 
@@ -1947,14 +1947,14 @@ async def on_task_command(
                     components = create_task_embed(
                         "❌ Sync Failed",
                         f"Could not sync display name from server: {str(e)}",
-                        RED_ACCENT,
+                        DARK_MAGENTA_ACCENT,
                         "This message will delete in 60 seconds"
                     )
             else:
                 components = create_task_embed(
                     "❌ Not in Server",
                     "This command must be used in a server, not in DMs.",
-                    RED_ACCENT,
+                    DARK_MAGENTA_ACCENT,
                     "This message will delete in 60 seconds"
                 )
 
@@ -1999,7 +1999,7 @@ async def on_task_command(
                 components = create_task_embed(
                     "❌ Assignment Failed",
                     message,
-                    RED_ACCENT,
+                    DARK_MAGENTA_ACCENT,
                     "This message will delete in 60 seconds"
                 )
 
@@ -2028,7 +2028,7 @@ async def on_task_command(
                 components = create_task_embed(
                     "❌ Unassign Failed",
                     message,
-                    RED_ACCENT,
+                    DARK_MAGENTA_ACCENT,
                     "This message will delete in 60 seconds"
                 )
 
@@ -2104,7 +2104,7 @@ async def handle_complete_from_reminder(
             await ctx.respond(
                 components=[
                     Container(
-                        accent_color=RED_ACCENT,
+                        accent_color=DARK_MAGENTA_ACCENT,
                         components=[
                             Text(content="❌ This reminder is not for you!")
                         ]
@@ -2147,7 +2147,7 @@ async def handle_complete_from_reminder(
             await ctx.respond(
                 components=[
                     Container(
-                        accent_color=RED_ACCENT,
+                        accent_color=DARK_MAGENTA_ACCENT,
                         components=[
                             Text(content="## ❌ Task Not Found"),
                             Text(content="This task may have already been completed or deleted.")
@@ -2162,7 +2162,7 @@ async def handle_complete_from_reminder(
             await ctx.respond(
                 components=[
                     Container(
-                        accent_color=RED_ACCENT,
+                        accent_color=DARK_MAGENTA_ACCENT,
                         components=[
                             Text(content="❌ An error occurred processing your request.")
                         ]
@@ -2199,7 +2199,7 @@ async def handle_snooze_reminder(
             await ctx.respond(
                 components=[
                     Container(
-                        accent_color=RED_ACCENT,
+                        accent_color=DARK_MAGENTA_ACCENT,
                         components=[
                             Text(content="❌ This reminder is not for you!")
                         ]
@@ -2215,7 +2215,7 @@ async def handle_snooze_reminder(
             await ctx.respond(
                 components=[
                     Container(
-                        accent_color=RED_ACCENT,
+                        accent_color=DARK_MAGENTA_ACCENT,
                         components=[
                             Text(content="❌ Invalid snooze duration")
                         ]
@@ -2265,7 +2265,7 @@ async def handle_snooze_reminder(
             await ctx.respond(
                 components=[
                     Container(
-                        accent_color=RED_ACCENT,
+                        accent_color=DARK_MAGENTA_ACCENT,
                         components=[
                             Text(content="## ❌ Snooze Failed"),
                             Text(content="Could not create new reminder. The task may no longer exist.")
@@ -2280,7 +2280,7 @@ async def handle_snooze_reminder(
             await ctx.respond(
                 components=[
                     Container(
-                        accent_color=RED_ACCENT,
+                        accent_color=DARK_MAGENTA_ACCENT,
                         components=[
                             Text(content="❌ An error occurred processing your request.")
                         ]

@@ -18,13 +18,13 @@ from hikari.impl import (
     InteractiveButtonBuilder as Button,
 )
 
-from utils.constants import GREEN_ACCENT, RED_ACCENT, GOLD_ACCENT, BLUE_ACCENT
+from utils.constants import GREEN_ACCENT, DARK_MAGENTA_ACCENT, GOLD_ACCENT, BLUE_ACCENT
 from extensions.components import register_action
 
 # War result colors
 WAR_COLORS = {
     "win": GREEN_ACCENT,  # 0x00ff00
-    "lose": RED_ACCENT,  # 0xff0000
+    "lose": DARK_MAGENTA_ACCENT,  # 0xff0000
     "blacklisted": 0x000000,  # Black
     "mismatch": GOLD_ACCENT  # 0xffd700
 }

@@ -27,7 +27,7 @@ from extensions.commands.utilities import loader, utilities
 from extensions.components import register_action
 from utils.mongo import MongoClient
 from utils.classes import Clan
-from utils.constants import GREEN_ACCENT, RED_ACCENT
+from utils.constants import GREEN_ACCENT, DARK_MAGENTA_ACCENT
 from utils.emoji import emojis
 
 # Permission constants - same as clan dashboard
@@ -488,7 +488,7 @@ class CloneCategory(
             # User doesn't have permission - show access denied message
             components = [
                 Container(
-                    accent_color=RED_ACCENT,
+                    accent_color=DARK_MAGENTA_ACCENT,
                     components=[
                         Text(content="## ❌ Access Denied"),
                         Separator(divider=True),
@@ -855,7 +855,7 @@ async def handle_clan_selection(
             
         error_components = [
             Container(
-                accent_color=RED_ACCENT,
+                accent_color=DARK_MAGENTA_ACCENT,
                 components=[
                     Text(content="".join(error_content_parts))
                 ]

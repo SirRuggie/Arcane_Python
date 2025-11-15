@@ -20,7 +20,7 @@ from hikari.impl import (
     ModalActionRowBuilder as ModalActionRow
 )
 
-from utils.constants import RED_ACCENT
+from utils.constants import DARK_MAGENTA_ACCENT
 from utils.emoji import emojis
 from utils.mongo import MongoClient
 from utils.classes import Clan
@@ -37,7 +37,7 @@ async def dashboard_page(
     clans = [Clan(data=data) for data in clan_data]
     components = [
         Container(
-            accent_color=RED_ACCENT,
+            accent_color=DARK_MAGENTA_ACCENT,
             components=[
                 Section(
                     accessory=Thumbnail(

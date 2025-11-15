@@ -2,7 +2,7 @@ import lightbulb
 import hikari
 
 from extensions.commands.fwa import fwa
-from utils.constants import BLUE_ACCENT, GOLD_ACCENT, GREEN_ACCENT, RED_ACCENT
+from utils.constants import BLUE_ACCENT, GOLD_ACCENT, GREEN_ACCENT, DARK_MAGENTA_ACCENT
 from utils.emoji import emojis
 
 from hikari.impl import (
@@ -59,7 +59,7 @@ class ChocolateCommand(
         if (self.player_tag and self.clan_tag) or (not self.player_tag and not self.clan_tag):
             components = [
                 Container(
-                    accent_color=RED_ACCENT,
+                    accent_color=DARK_MAGENTA_ACCENT,
                     components=[
                         Text(content="## ❌ **Invalid Usage**"),
                         Text(content=(
@@ -98,7 +98,7 @@ class ChocolateCommand(
         if not is_valid_tag(tag):
             components = [
                 Container(
-                    accent_color=RED_ACCENT,
+                    accent_color=DARK_MAGENTA_ACCENT,
                     components=[
                         Text(content="## ❌ **Invalid Tag Format**"),
                         Text(content=(

@@ -29,7 +29,7 @@ from hikari.impl import (
     TextInputBuilder as TextInput,
 )
 
-from utils.constants import BLUE_ACCENT, GREEN_ACCENT, RED_ACCENT
+from utils.constants import BLUE_ACCENT, GREEN_ACCENT, DARK_MAGENTA_ACCENT
 from utils.mongo import MongoClient
 from utils.emoji import emojis
 from extensions.components import register_action
@@ -412,7 +412,7 @@ async def handle_player_tag_modal_submit(
         # Invalid player tag
         error_components = [
             Container(
-                accent_color=RED_ACCENT,
+                accent_color=DARK_MAGENTA_ACCENT,
                 components=[
                     Text(content="## ❌ **Invalid Player Tag**"),
                     Text(content=f"Could not find a player with tag: **{player_tag}**"),
@@ -434,7 +434,7 @@ async def handle_player_tag_modal_submit(
         # General error
         error_components = [
             Container(
-                accent_color=RED_ACCENT,
+                accent_color=DARK_MAGENTA_ACCENT,
                 components=[
                     Text(content="## ❌ **Error**"),
                     Text(content="An error occurred processing your request."),

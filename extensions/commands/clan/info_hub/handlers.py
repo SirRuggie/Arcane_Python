@@ -23,7 +23,7 @@ from hikari.impl import (
 from extensions.components import register_action
 from utils.mongo import MongoClient
 from utils.classes import Clan
-from utils.constants import RED_ACCENT, GOLD_ACCENT, BLUE_ACCENT, GREEN_ACCENT, MAGENTA_ACCENT
+from utils.constants import DARK_MAGENTA_ACCENT, GOLD_ACCENT, BLUE_ACCENT, GREEN_ACCENT, MAGENTA_ACCENT
 from .helpers import get_clans_by_type, format_th_requirement, get_league_emoji
 from utils.emoji import emojis
 
@@ -39,11 +39,11 @@ LEAGUE_ORDER = [
 ]
 
 BANNERS = {
-    "Competitive": "https://res.cloudinary.com/dxmtzuomk/image/upload/v1752233879/server_banners/main_clans.png",
-    "Casual": "https://res.cloudinary.com/dxmtzuomk/image/upload/v1752237075/server_banners/casual_clans.png",
-    "Zen": "https://res.cloudinary.com/dxmtzuomk/image/upload/v1752234005/server_banners/zen_clans.png",
-    "FWA": "https://res.cloudinary.com/dxmtzuomk/image/upload/v1752233879/server_banners/fwa_clans.png",
-    "Trial": "https://res.cloudinary.com/dxmtzuomk/image/upload/v1752233879/server_banners/trial_clans.png"
+    "Competitive": "https://res.cloudinary.com/dxmtzuomk/image/upload/v1763220421/server_banners/Competitive.png",
+    "Casual": "https://res.cloudinary.com/dxmtzuomk/image/upload/v1763220417/server_banners/Casual.png",
+    "Zen": "https://res.cloudinary.com/dxmtzuomk/image/upload/v1763220418/server_banners/Zen.png",
+    "FWA": "https://res.cloudinary.com/dxmtzuomk/image/upload/v1763222405/server_banners/FWA.png",
+    "Trial": "https://res.cloudinary.com/dxmtzuomk/image/upload/v1763222428/server_banners/TrialClans.png"
 }
 
 
@@ -186,7 +186,7 @@ async def show_competitive_clans(
 ):
     """Show competitive/main clans"""
     components = await build_clan_list_components(
-        ctx, "Competitive", RED_ACCENT, mongo, coc_client, bot
+        ctx, "Competitive", DARK_MAGENTA_ACCENT, mongo, coc_client, bot
     )
     await ctx.respond(components=components, ephemeral=True)
 
