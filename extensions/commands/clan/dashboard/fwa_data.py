@@ -35,7 +35,7 @@ from hikari.impl import (
 FWA_REP_ROLE_ID = 1088914884999249940
 
 # TH levels we support for FWA (ordered from highest to lowest)
-FWA_TH_LEVELS = ["th17", "th17_new", "th16", "th16_new", "th15", "th14", "th13", "th12", "th11", "th10", "th9"]
+FWA_TH_LEVELS = ["th18", "th18_new", "th17", "th17_new", "th16", "th16_new", "th15", "th14", "th13", "th12", "th11", "th10", "th9"]
 
 # Cloudinary folders for FWA images
 CLOUDINARY_WAR_BASE_FOLDER = "fwa/war_bases"

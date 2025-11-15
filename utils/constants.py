@@ -16,7 +16,7 @@ DISBOARD_REVIEW_URL = "https://disboard.org/review/create/640280017770774549"
 # Clan Information
 CLAN_TYPES = ["Competitive", "Casual", "FWA", "Zen"]
 CLAN_STATUS = ["Main", "Zen", "FWA", "Trial"]
-TH_LEVELS = [str(i) for i in range(3, 18)]
+TH_LEVELS = [str(i) for i in range(3, 19)]
 TH_ATTRIBUTE = ["Max", "Normal", "Rushed", "Non-Rushed"]
 
 # Staff Case Types
@@ -25,6 +25,8 @@ STAFF_CASE_TYPES = ["Warning", "Suspension", "Termination", "Staff Ban", "Note"]
 
 # FWA Images
 FWA_WAR_BASE = {
+    "th18": "https://res.cloudinary.com/dxmtzuomk/image/upload/v1751620702/TH18_WarBase.jpg",
+    "th18_new": "https://res.cloudinary.com/dxmtzuomk/image/upload/v1751620702/TH18_WarBase.jpg",
     "th9": "https://res.cloudinary.com/dxmtzuomk/image/upload/v1751620708/TH9_WarBase.jpg",
     "th10": "https://res.cloudinary.com/dxmtzuomk/image/upload/v1751620707/TH10_WarBase.jpg",
     "th11": "https://res.cloudinary.com/dxmtzuomk/image/upload/v1751620706/TH11_WarBase.jpg",
@@ -39,6 +41,8 @@ FWA_WAR_BASE = {
 }
 
 FWA_ACTIVE_WAR_BASE = {
+    "th18": "https://res.cloudinary.com/dxmtzuomk/image/upload/v1751620701/TH18_Active_WarBase.jpg",
+    "th18_new": "https://res.cloudinary.com/dxmtzuomk/image/upload/v1751620701/TH18_Active_WarBase.jpg",
     "th9": "https://res.cloudinary.com/dxmtzuomk/image/upload/v1751620707/TH9_Active_WarBase.jpg",
     "th10": "https://res.cloudinary.com/dxmtzuomk/image/upload/v1751620707/TH10_Active_WarBase.jpg",
     "th11": "https://res.cloudinary.com/dxmtzuomk/image/upload/v1751620706/TH11_Active_WarBase.jpg",
