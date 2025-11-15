@@ -5,6 +5,7 @@ GOLD_ACCENT = hikari.Color.from_hex_code("FFD700")
 BLUE_ACCENT = hikari.Color.from_hex_code("0066FF")
 GREEN_ACCENT = hikari.Color.from_hex_code("00B237")
 MAGENTA_ACCENT = hikari.Color.from_hex_code("FF00FF")
+DARK_MAGENTA_ACCENT = hikari.Color.from_hex_code("#990099")
 DARK_GRAY_ACCENT = hikari.Color.from_hex_code("#2F3136")
 
 # Disboard Configuration
