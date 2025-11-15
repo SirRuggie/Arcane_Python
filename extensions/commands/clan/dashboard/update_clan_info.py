@@ -36,9 +36,8 @@ from utils.mongo import MongoClient
 from extensions.commands.clan.dashboard import dashboard_page
 from extensions.commands.clan.dashboard import update_clan_info_general
 
-CLAN_MANAGEMENT_ROLE_ID = 1060318031575793694
+CLAN_MANAGEMENT_ROLE_ID = 1436017625644662877
 ADDITIONAL_MANAGEMENT_ROLE_ID = 1371470242076954706
-CLAN_DELETION_USER_ID = 505227988229554179
 
 # List of all roles that can add/edit clans
 ALLOWED_MANAGEMENT_ROLES = [CLAN_MANAGEMENT_ROLE_ID, ADDITIONAL_MANAGEMENT_ROLE_ID]
@@ -882,8 +881,18 @@ async def remove_clan_select(
         mongo: MongoClient = lightbulb.di.INJECTED,
         **kwargs
 ):
-    # Check if user is authorized to delete clans
-    if ctx.user.id != CLAN_DELETION_USER_ID:
+    # Check if user has the clan management role (required for deletion)
+    member = ctx.member
+    if not member:
+        await ctx.respond(
+            "❌ Unable to verify permissions. Please try again.",
+            ephemeral=True
+        )
+        return
+
+    # Check if the user has the clan management role (only this role can delete)
+    user_role_ids = [role.id for role in member.get_roles()]
+    if CLAN_MANAGEMENT_ROLE_ID not in user_role_ids:
         components = [
             Container(
                 accent_color=RED_ACCENT,
@@ -892,7 +901,8 @@ async def remove_clan_select(
                     Separator(divider=True),
                     Text(content=(
                         "You do not have permission to delete clans.\n\n"
-                        f"Please have <@{CLAN_DELETION_USER_ID}> remove the clan if needed."
+                        "This feature is restricted to users with the Clan Management role.\n"
+                        "If you believe you should have access, please contact an administrator."
                     )),
                     Media(
                         items=[
